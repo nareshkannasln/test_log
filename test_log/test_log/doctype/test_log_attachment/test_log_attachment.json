@@ -1,0 +1,63 @@
+{
+ "actions": [],
+ "allow_rename": 1,
+ "creation": "2026-08-07 10:00:00.000000",
+ "doctype": "DocType",
+ "editable_grid": 1,
+ "engine": "InnoDB",
+ "field_order": [
+  "attachment_type",
+  "file_url",
+  "caption",
+  "external_link"
+ ],
+ "fields": [
+  {
+   "columns": 2,
+   "default": "Screenshot",
+   "fieldname": "attachment_type",
+   "fieldtype": "Select",
+   "in_list_view": 1,
+   "label": "Type",
+   "options": "Screenshot\nScreen Recording\nLog File\nDocument\nExternal Link",
+   "reqd": 1
+  },
+  {
+   "columns": 3,
+   "description": "Images and videos are previewed inline on the form.",
+   "fieldname": "file_url",
+   "fieldtype": "Attach",
+   "in_list_view": 1,
+   "label": "File"
+  },
+  {
+   "columns": 4,
+   "fieldname": "caption",
+   "fieldtype": "Data",
+   "in_list_view": 1,
+   "label": "Caption"
+  },
+  {
+   "columns": 2,
+   "depends_on": "eval:doc.attachment_type == \"External Link\"",
+   "description": "Use for Loom / Drive / Jira links instead of an upload.",
+   "fieldname": "external_link",
+   "fieldtype": "Data",
+   "in_list_view": 1,
+   "label": "External Link",
+   "options": "URL"
+  }
+ ],
+ "index_web_pages_for_search": 1,
+ "istable": 1,
+ "links": [],
+ "modified": "2026-08-07 10:00:00.000000",
+ "modified_by": "Administrator",
+ "module": "Test Log",
+ "name": "Test Log Attachment",
+ "owner": "Administrator",
+ "permissions": [],
+ "sort_field": "modified",
+ "sort_order": "DESC",
+ "states": []
+}

@@ -1,0 +1,199 @@
+{
+ "actions": [],
+ "allow_rename": 1,
+ "autoname": "naming_series:",
+ "creation": "2026-08-07 10:00:00.000000",
+ "doctype": "DocType",
+ "editable_grid": 1,
+ "engine": "InnoDB",
+ "field_order": [
+  "naming_series",
+  "title",
+  "product",
+  "build_version",
+  "column_break_main",
+  "status",
+  "tester",
+  "run_date",
+  "section_break_summary",
+  "total_logs",
+  "open_count",
+  "ongoing_count",
+  "column_break_summary",
+  "fixed_count",
+  "completed_count",
+  "wont_fix_count",
+  "section_break_scope",
+  "description"
+ ],
+ "fields": [
+  {
+   "default": "TRUN-.YYYY.-",
+   "fieldname": "naming_series",
+   "fieldtype": "Select",
+   "label": "Series",
+   "options": "TRUN-.YYYY.-",
+   "print_hide": 1,
+   "reqd": 1
+  },
+  {
+   "description": "e.g. \"Sprint 42 regression sweep\"",
+   "fieldname": "title",
+   "fieldtype": "Data",
+   "in_list_view": 1,
+   "label": "Title",
+   "reqd": 1
+  },
+  {
+   "fieldname": "product",
+   "fieldtype": "Link",
+   "in_list_view": 1,
+   "in_standard_filter": 1,
+   "label": "Product",
+   "options": "Test Product",
+   "reqd": 1
+  },
+  {
+   "fieldname": "build_version",
+   "fieldtype": "Data",
+   "label": "Build / Version"
+  },
+  {
+   "fieldname": "column_break_main",
+   "fieldtype": "Column Break"
+  },
+  {
+   "default": "Planned",
+   "fieldname": "status",
+   "fieldtype": "Select",
+   "in_list_view": 1,
+   "in_standard_filter": 1,
+   "label": "Status",
+   "options": "Planned\nIn Progress\nCompleted\nSigned Off",
+   "reqd": 1
+  },
+  {
+   "default": "__user",
+   "fieldname": "tester",
+   "fieldtype": "Link",
+   "in_standard_filter": 1,
+   "label": "Lead Tester",
+   "options": "User",
+   "reqd": 1
+  },
+  {
+   "default": "Today",
+   "fieldname": "run_date",
+   "fieldtype": "Date",
+   "label": "Run Date"
+  },
+  {
+   "fieldname": "section_break_summary",
+   "fieldtype": "Section Break",
+   "label": "Summary"
+  },
+  {
+   "fieldname": "total_logs",
+   "fieldtype": "Int",
+   "label": "Total Logs",
+   "read_only": 1
+  },
+  {
+   "fieldname": "open_count",
+   "fieldtype": "Int",
+   "label": "Open",
+   "read_only": 1
+  },
+  {
+   "fieldname": "ongoing_count",
+   "fieldtype": "Int",
+   "label": "Ongoing",
+   "read_only": 1
+  },
+  {
+   "fieldname": "column_break_summary",
+   "fieldtype": "Column Break"
+  },
+  {
+   "fieldname": "fixed_count",
+   "fieldtype": "Int",
+   "label": "Fixed",
+   "read_only": 1
+  },
+  {
+   "fieldname": "completed_count",
+   "fieldtype": "Int",
+   "label": "Completed",
+   "read_only": 1
+  },
+  {
+   "fieldname": "wont_fix_count",
+   "fieldtype": "Int",
+   "label": "Won't Fix",
+   "read_only": 1
+  },
+  {
+   "fieldname": "section_break_scope",
+   "fieldtype": "Section Break",
+   "label": "Scope & Notes"
+  },
+  {
+   "fieldname": "description",
+   "fieldtype": "Text Editor",
+   "label": "What is being tested"
+  }
+ ],
+ "index_web_pages_for_search": 1,
+ "links": [
+  {
+   "link_doctype": "Test Log",
+   "link_fieldname": "test_run"
+  }
+ ],
+ "modified": "2026-08-07 10:00:00.000000",
+ "modified_by": "Administrator",
+ "module": "Test Log",
+ "name": "Test Run",
+ "naming_rule": "By \"Naming Series\" field",
+ "owner": "Administrator",
+ "permissions": [
+  {
+   "create": 1,
+   "delete": 1,
+   "email": 1,
+   "export": 1,
+   "print": 1,
+   "read": 1,
+   "report": 1,
+   "role": "System Manager",
+   "share": 1,
+   "write": 1
+  },
+  {
+   "create": 1,
+   "delete": 1,
+   "email": 1,
+   "export": 1,
+   "print": 1,
+   "read": 1,
+   "report": 1,
+   "role": "Tester",
+   "share": 1,
+   "write": 1
+  },
+  {
+   "email": 1,
+   "export": 1,
+   "print": 1,
+   "read": 1,
+   "report": 1,
+   "role": "Developer",
+   "share": 1
+  }
+ ],
+ "sort_field": "modified",
+ "sort_order": "DESC",
+ "states": [],
+ "title_field": "title",
+ "track_changes": 1
+}

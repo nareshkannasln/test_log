@@ -1,0 +1,285 @@
+{
+ "actions": [],
+ "allow_rename": 1,
+ "autoname": "naming_series:",
+ "creation": "2026-08-07 10:00:00.000000",
+ "doctype": "DocType",
+ "editable_grid": 1,
+ "engine": "InnoDB",
+ "field_order": [
+  "naming_series",
+  "subject",
+  "test_run",
+  "product",
+  "module_feature",
+  "column_break_main",
+  "status",
+  "severity",
+  "test_type",
+  "section_break_people",
+  "tester",
+  "test_date",
+  "column_break_people",
+  "assigned_developer",
+  "target_date",
+  "section_break_details",
+  "environment",
+  "build_version",
+  "steps_to_reproduce",
+  "expected_result",
+  "actual_result",
+  "section_break_evidence",
+  "attachments",
+  "attachment_preview",
+  "section_break_dev",
+  "resolution",
+  "column_break_dev",
+  "fixed_in_build",
+  "resolved_by",
+  "resolved_on"
+ ],
+ "fields": [
+  {
+   "default": "TL-.YYYY.-",
+   "fieldname": "naming_series",
+   "fieldtype": "Select",
+   "label": "Series",
+   "options": "TL-.YYYY.-",
+   "print_hide": 1,
+   "reqd": 1
+  },
+  {
+   "description": "One line describing what was tested or what broke.",
+   "fieldname": "subject",
+   "fieldtype": "Data",
+   "in_global_search": 1,
+   "in_list_view": 1,
+   "label": "Subject",
+   "reqd": 1
+  },
+  {
+   "fieldname": "test_run",
+   "fieldtype": "Link",
+   "in_standard_filter": 1,
+   "label": "Test Run",
+   "options": "Test Run"
+  },
+  {
+   "fetch_from": "test_run.product",
+   "fetch_if_empty": 1,
+   "fieldname": "product",
+   "fieldtype": "Link",
+   "in_list_view": 1,
+   "in_standard_filter": 1,
+   "label": "Product",
+   "options": "Test Product",
+   "reqd": 1
+  },
+  {
+   "description": "Screen, module or feature area.",
+   "fieldname": "module_feature",
+   "fieldtype": "Data",
+   "label": "Module / Feature"
+  },
+  {
+   "fieldname": "column_break_main",
+   "fieldtype": "Column Break"
+  },
+  {
+   "default": "Open",
+   "fieldname": "status",
+   "fieldtype": "Select",
+   "in_list_view": 1,
+   "in_standard_filter": 1,
+   "label": "Status",
+   "options": "Open\nOngoing\nFixed\nCompleted\nWon't Fix\nReopened",
+   "reqd": 1,
+   "search_index": 1
+  },
+  {
+   "default": "Medium",
+   "fieldname": "severity",
+   "fieldtype": "Select",
+   "in_list_view": 1,
+   "in_standard_filter": 1,
+   "label": "Severity",
+   "options": "Low\nMedium\nHigh\nCritical",
+   "reqd": 1
+  },
+  {
+   "default": "Functional",
+   "fieldname": "test_type",
+   "fieldtype": "Select",
+   "label": "Test Type",
+   "options": "Functional\nUI / UX\nRegression\nPerformance\nSecurity\nIntegration\nOther"
+  },
+  {
+   "fieldname": "section_break_people",
+   "fieldtype": "Section Break",
+   "label": "People & Timing"
+  },
+  {
+   "default": "__user",
+   "fieldname": "tester",
+   "fieldtype": "Link",
+   "in_standard_filter": 1,
+   "label": "Tester",
+   "options": "User",
+   "reqd": 1
+  },
+  {
+   "default": "Now",
+   "fieldname": "test_date",
+   "fieldtype": "Datetime",
+   "label": "Tested On"
+  },
+  {
+   "fieldname": "column_break_people",
+   "fieldtype": "Column Break"
+  },
+  {
+   "description": "Saving with a developer set shares the log with them and assigns it.",
+   "fieldname": "assigned_developer",
+   "fieldtype": "Link",
+   "in_list_view": 1,
+   "in_standard_filter": 1,
+   "label": "Assigned Developer",
+   "options": "User"
+  },
+  {
+   "fieldname": "target_date",
+   "fieldtype": "Date",
+   "label": "Target Fix Date"
+  },
+  {
+   "fieldname": "section_break_details",
+   "fieldtype": "Section Break",
+   "label": "Test Details"
+  },
+  {
+   "description": "Browser / OS / device, e.g. Chrome 124 on Windows 11",
+   "fieldname": "environment",
+   "fieldtype": "Data",
+   "label": "Environment"
+  },
+  {
+   "fieldname": "build_version",
+   "fieldtype": "Data",
+   "label": "Build / Version Tested"
+  },
+  {
+   "fieldname": "steps_to_reproduce",
+   "fieldtype": "Text Editor",
+   "label": "Steps to Reproduce"
+  },
+  {
+   "fieldname": "expected_result",
+   "fieldtype": "Small Text",
+   "label": "Expected Result"
+  },
+  {
+   "fieldname": "actual_result",
+   "fieldtype": "Small Text",
+   "label": "Actual Result"
+  },
+  {
+   "fieldname": "section_break_evidence",
+   "fieldtype": "Section Break",
+   "label": "Evidence"
+  },
+  {
+   "fieldname": "attachments",
+   "fieldtype": "Table",
+   "label": "Screenshots & Recordings",
+   "options": "Test Log Attachment"
+  },
+  {
+   "fieldname": "attachment_preview",
+   "fieldtype": "HTML",
+   "label": "Preview"
+  },
+  {
+   "fieldname": "section_break_dev",
+   "fieldtype": "Section Break",
+   "label": "Developer Update"
+  },
+  {
+   "fieldname": "resolution",
+   "fieldtype": "Text Editor",
+   "label": "Resolution / Developer Notes"
+  },
+  {
+   "fieldname": "column_break_dev",
+   "fieldtype": "Column Break"
+  },
+  {
+   "fieldname": "fixed_in_build",
+   "fieldtype": "Data",
+   "label": "Fixed in Build"
+  },
+  {
+   "fieldname": "resolved_by",
+   "fieldtype": "Link",
+   "label": "Resolved By",
+   "options": "User",
+   "read_only": 1
+  },
+  {
+   "fieldname": "resolved_on",
+   "fieldtype": "Datetime",
+   "label": "Resolved On",
+   "read_only": 1
+  }
+ ],
+ "index_web_pages_for_search": 1,
+ "links": [],
+ "modified": "2026-08-07 10:00:00.000000",
+ "modified_by": "Administrator",
+ "module": "Test Log",
+ "name": "Test Log",
+ "naming_rule": "By \"Naming Series\" field",
+ "owner": "Administrator",
+ "permissions": [
+  {
+   "create": 1,
+   "delete": 1,
+   "email": 1,
+   "export": 1,
+   "print": 1,
+   "read": 1,
+   "report": 1,
+   "role": "System Manager",
+   "share": 1,
+   "write": 1
+  },
+  {
+   "create": 1,
+   "delete": 1,
+   "email": 1,
+   "export": 1,
+   "print": 1,
+   "read": 1,
+   "report": 1,
+   "role": "Tester",
+   "share": 1,
+   "write": 1
+  },
+  {
+   "email": 1,
+   "export": 1,
+   "print": 1,
+   "read": 1,
+   "report": 1,
+   "role": "Developer",
+   "share": 1,
+   "write": 1
+  }
+ ],
+ "search_fields": "product,status,assigned_developer",
+ "sort_field": "modified",
+ "sort_order": "DESC",
+ "states": [],
+ "title_field": "subject",
+ "track_changes": 1,
+ "track_seen": 1
+}

@@ -61,11 +61,6 @@ def get_run_stats(test_run: str):
 	"""Status breakdown for the Test Run form dashboard."""
 	frappe.has_permission("Test Run", "read", doc=test_run, throw=True)
 
-	rows = frappe.get_all(
-		"Test Log",
-		filters={"test_run": test_run},
-		fields=["status", "count(name) as qty"],
-		group_by="status",
-		order_by="status",
-	)
-	return {row.status: row.qty for row in rows}
+	from test_log.test_log.doctype.test_run.test_run import count_by_status
+
+	return {row.status: row.qty for row in count_by_status(test_run)}

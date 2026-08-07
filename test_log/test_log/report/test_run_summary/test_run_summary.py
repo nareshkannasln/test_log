@@ -114,12 +114,9 @@ def attach_evidence(logs):
 
 
 def get_chart(filters):
-	rows = frappe.get_all(
-		"Test Log",
-		filters={"test_run": filters.test_run} if filters.get("test_run") else {},
-		fields=["status", "count(name) as qty"],
-		group_by="status",
-	)
+	from test_log.test_log.doctype.test_run.test_run import count_by_status
+
+	rows = count_by_status(filters.get("test_run"))
 	if not rows:
 		return None
 

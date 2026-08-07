@@ -3,6 +3,7 @@
 
 import frappe
 from frappe.model.document import Document
+from frappe.query_builder.functions import Count
 
 STATUS_FIELD_MAP = {
 	"Open": "open_count",
@@ -14,15 +15,22 @@ STATUS_FIELD_MAP = {
 }
 
 
+def count_by_status(test_run: str | None = None):
+	"""Logs grouped by status. Built with the query builder because Frappe v16 rejects
+	raw aggregate strings such as "count(name) as qty" in get_all()."""
+	log = frappe.qb.DocType("Test Log")
+	query = frappe.qb.from_(log).select(log.status, Count("*").as_("qty")).groupby(log.status)
+
+	if test_run:
+		query = query.where(log.test_run == test_run)
+
+	return query.run(as_dict=True)
+
+
 class TestRun(Document):
 	def update_summary(self, save=True):
 		"""Recount child test logs by status and cache the totals on this run."""
-		counts = frappe.get_all(
-			"Test Log",
-			filters={"test_run": self.name},
-			fields=["status", "count(name) as qty"],
-			group_by="status",
-		)
+		counts = count_by_status(self.name)
 
 		for fieldname in set(STATUS_FIELD_MAP.values()):
 			self.set(fieldname, 0)

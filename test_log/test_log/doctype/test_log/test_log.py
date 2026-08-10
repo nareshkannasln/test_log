@@ -6,9 +6,8 @@ from frappe import _
 from frappe.model.document import Document
 from frappe.utils import get_url_to_form, now_datetime
 
+from test_log.constants import RESOLVED_STATUSES, URGENT_SEVERITIES
 from test_log.test_log.doctype.test_run.test_run import refresh_summary
-
-RESOLVED_STATUSES = ("Fixed", "Completed", "Won't Fix")
 
 
 class TestLog(Document):
@@ -24,6 +23,8 @@ class TestLog(Document):
 		previous = self.get_doc_before_save()
 		if previous and previous.test_run and previous.test_run != self.test_run:
 			refresh_summary(previous.test_run)
+
+		self.queue_run_report()
 
 	def on_trash(self):
 		refresh_summary(self.test_run)
@@ -85,8 +86,29 @@ class TestLog(Document):
 				"assign_to": [self.assigned_developer],
 				"description": self.subject,
 				"date": self.target_date,
-				"priority": "High" if self.severity in ("High", "Critical") else "Medium",
+				"priority": "High" if self.severity in URGENT_SEVERITIES else "Medium",
 			}
+		)
+
+	def queue_run_report(self):
+		"""Keep the run's Word report current, if the site asked for that.
+
+		Deduplicated per run, so a burst of logs rebuilds the document once.
+		"""
+		from test_log.test_log.doctype.test_log_settings.test_log_settings import get_settings
+
+		# .get() rather than attribute access: an app updated but not yet migrated must
+		# not break saving a test log.
+		if not self.test_run or not get_settings().get("auto_attach_run_report"):
+			return
+
+		frappe.enqueue(
+			"test_log.api.report.refresh_run_report",
+			queue="long",
+			job_id=f"test-log-report::{self.test_run}",
+			deduplicate=True,
+			enqueue_after_commit=True,
+			test_run=self.test_run,
 		)
 
 	def notify_status_change(self):

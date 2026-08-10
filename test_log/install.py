@@ -35,7 +35,26 @@ def before_install():
 def after_install():
 	create_number_cards()
 	create_dashboard_chart()
+	setup_tester_mode()
 	frappe.db.commit()
+
+
+def setup_tester_mode():
+	"""Turn the capture widget on for testers the moment the app lands on a site.
+
+	Only ever writes when the settings have never been saved — an admin who switched
+	tester mode off keeps it off across upgrades.
+	"""
+	if frappe.db.get_singles_dict("Test Log Settings"):
+		return
+
+	settings = frappe.get_single("Test Log Settings")
+	settings.enable_tester_mode = 1
+
+	for role_name in ("Tester", "System Manager"):
+		settings.append("allowed_roles", {"role": role_name})
+
+	settings.save(ignore_permissions=True)
 
 
 def create_number_cards():

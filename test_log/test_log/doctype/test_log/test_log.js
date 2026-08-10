@@ -49,6 +49,23 @@ frappe.ui.form.on("Test Log", {
 		if (frm.is_new()) return;
 
 		frm.add_custom_button(
+			__("Word Report"),
+			() =>
+				frappe.call({
+					method: "test_log.api.build_log_report",
+					args: { test_log: frm.doc.name },
+					freeze: true,
+					freeze_message: __("Building the report..."),
+					callback(r) {
+						if (!r.message?.file_url) return;
+						frm.reload_doc();
+						window.open(r.message.file_url, "_blank", "noopener");
+					},
+				}),
+			__("Actions")
+		);
+
+		frm.add_custom_button(
 			__("Share with Developer"),
 			() => {
 				const dialog = new frappe.ui.Dialog({

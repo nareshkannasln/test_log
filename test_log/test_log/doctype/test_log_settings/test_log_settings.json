@@ -1,0 +1,275 @@
+{
+ "actions": [],
+ "allow_rename": 0,
+ "creation": "2026-08-10 10:00:00.000000",
+ "doctype": "DocType",
+ "editable_grid": 1,
+ "engine": "InnoDB",
+ "field_order": [
+  "enable_tester_mode",
+  "tester_mode_help",
+  "section_break_audience",
+  "available_to_all_users",
+  "allowed_roles",
+  "section_break_defaults",
+  "default_product",
+  "default_test_run",
+  "column_break_defaults",
+  "default_severity",
+  "default_test_type",
+  "section_break_tools",
+  "enable_screenshot",
+  "enable_screen_recording",
+  "enable_snipping",
+  "enable_file_attach",
+  "column_break_tools",
+  "recording_limit_seconds",
+  "max_attachment_mb",
+  "private_attachments",
+  "section_break_context",
+  "capture_page_context",
+  "capture_console_errors",
+  "column_break_context",
+  "console_error_limit",
+  "section_break_offline",
+  "enable_offline_queue",
+  "column_break_offline",
+  "sync_interval_seconds",
+  "section_break_report",
+  "auto_attach_run_report"
+ ],
+ "fields": [
+  {
+   "default": "0",
+   "description": "Shows a capture button in the bottom-right corner of every screen, so testers can log findings without leaving the page they are testing.",
+   "fieldname": "enable_tester_mode",
+   "fieldtype": "Check",
+   "label": "Enable Tester Mode"
+  },
+  {
+   "depends_on": "enable_tester_mode",
+   "fieldname": "tester_mode_help",
+   "fieldtype": "HTML",
+   "label": "Tester Mode Help",
+   "options": "<div class=\"text-muted small\">Testers can also toggle the button off for themselves from the panel; this switch controls whether it is offered at all.</div>"
+  },
+  {
+   "depends_on": "enable_tester_mode",
+   "fieldname": "section_break_audience",
+   "fieldtype": "Section Break",
+   "label": "Who Sees It"
+  },
+  {
+   "default": "0",
+   "fieldname": "available_to_all_users",
+   "fieldtype": "Check",
+   "label": "Available to All Users"
+  },
+  {
+   "depends_on": "eval:!doc.available_to_all_users",
+   "description": "Leave empty to fall back to Tester and System Manager.",
+   "fieldname": "allowed_roles",
+   "fieldtype": "Table MultiSelect",
+   "label": "Allowed Roles",
+   "options": "Test Log Widget Role"
+  },
+  {
+   "depends_on": "enable_tester_mode",
+   "fieldname": "section_break_defaults",
+   "fieldtype": "Section Break",
+   "label": "Defaults for Logged Entries"
+  },
+  {
+   "description": "Pre-selected on the capture panel. Testers can change it per entry.",
+   "fieldname": "default_product",
+   "fieldtype": "Link",
+   "label": "Default Product",
+   "options": "Test Product"
+  },
+  {
+   "description": "The sheet new entries land in when the tester has not picked one.",
+   "fieldname": "default_test_run",
+   "fieldtype": "Link",
+   "label": "Default Test Run",
+   "options": "Test Run"
+  },
+  {
+   "fieldname": "column_break_defaults",
+   "fieldtype": "Column Break"
+  },
+  {
+   "default": "Medium",
+   "fieldname": "default_severity",
+   "fieldtype": "Select",
+   "label": "Default Severity",
+   "options": "Low\nMedium\nHigh\nCritical"
+  },
+  {
+   "default": "Functional",
+   "fieldname": "default_test_type",
+   "fieldtype": "Select",
+   "label": "Default Test Type",
+   "options": "Functional\nUI / UX\nRegression\nPerformance\nSecurity\nIntegration\nOther"
+  },
+  {
+   "depends_on": "enable_tester_mode",
+   "fieldname": "section_break_tools",
+   "fieldtype": "Section Break",
+   "label": "Capture Tools"
+  },
+  {
+   "default": "1",
+   "description": "Grabs a frame of the screen the tester picks. Needs HTTPS or localhost.",
+   "fieldname": "enable_screenshot",
+   "fieldtype": "Check",
+   "label": "Screenshot"
+  },
+  {
+   "default": "1",
+   "fieldname": "enable_screen_recording",
+   "fieldtype": "Check",
+   "label": "Screen Recording"
+  },
+  {
+   "default": "1",
+   "description": "Crop and annotate a capture before attaching it.",
+   "fieldname": "enable_snipping",
+   "fieldtype": "Check",
+   "label": "Snip & Annotate"
+  },
+  {
+   "default": "1",
+   "description": "Drag, paste or browse for files. Pasting stays available regardless.",
+   "fieldname": "enable_file_attach",
+   "fieldtype": "Check",
+   "label": "File Attach"
+  },
+  {
+   "fieldname": "column_break_tools",
+   "fieldtype": "Column Break"
+  },
+  {
+   "default": "180",
+   "description": "Recording stops itself at this length. 0 means no limit.",
+   "fieldname": "recording_limit_seconds",
+   "fieldtype": "Int",
+   "label": "Recording Limit (seconds)",
+   "non_negative": 1
+  },
+  {
+   "default": "50",
+   "fieldname": "max_attachment_mb",
+   "fieldtype": "Int",
+   "label": "Max Attachment Size (MB)",
+   "non_negative": 1
+  },
+  {
+   "default": "1",
+   "description": "Private files are only visible to people the test log is shared with.",
+   "fieldname": "private_attachments",
+   "fieldtype": "Check",
+   "label": "Upload as Private Files"
+  },
+  {
+   "depends_on": "enable_tester_mode",
+   "fieldname": "section_break_context",
+   "fieldtype": "Section Break",
+   "label": "Recorded Automatically"
+  },
+  {
+   "default": "1",
+   "description": "Page route, full URL, browser, OS and viewport size.",
+   "fieldname": "capture_page_context",
+   "fieldtype": "Check",
+   "label": "Page Context"
+  },
+  {
+   "default": "1",
+   "description": "Javascript errors and failed requests seen on the page before the entry was logged.",
+   "fieldname": "capture_console_errors",
+   "fieldtype": "Check",
+   "label": "Console Errors"
+  },
+  {
+   "fieldname": "column_break_context",
+   "fieldtype": "Column Break"
+  },
+  {
+   "default": "20",
+   "depends_on": "capture_console_errors",
+   "fieldname": "console_error_limit",
+   "fieldtype": "Int",
+   "label": "Keep Last N Errors",
+   "non_negative": 1
+  },
+  {
+   "depends_on": "enable_tester_mode",
+   "fieldname": "section_break_offline",
+   "fieldtype": "Section Break",
+   "label": "Offline"
+  },
+  {
+   "default": "1",
+   "description": "Entries are written to the browser's local database first and uploaded when the site is reachable, so nothing is lost while testing offline.",
+   "fieldname": "enable_offline_queue",
+   "fieldtype": "Check",
+   "label": "Queue Entries Offline"
+  },
+  {
+   "fieldname": "column_break_offline",
+   "fieldtype": "Column Break"
+  },
+  {
+   "default": "60",
+   "description": "How often a waiting queue retries. Minimum 15.",
+   "fieldname": "sync_interval_seconds",
+   "fieldtype": "Int",
+   "label": "Retry Every (seconds)",
+   "non_negative": 1
+  },
+  {
+   "fieldname": "section_break_report",
+   "fieldtype": "Section Break",
+   "label": "Word Report"
+  },
+  {
+   "default": "0",
+   "description": "Keeps a Word document attached to every test run — each log with its description and screenshots embedded — refreshed in the background whenever a log changes. Leave off to build it on demand from the run.",
+   "fieldname": "auto_attach_run_report",
+   "fieldtype": "Check",
+   "label": "Keep a Report Attached to Each Run"
+  }
+ ],
+ "index_web_pages_for_search": 1,
+ "issingle": 1,
+ "links": [],
+ "modified": "2026-08-10 10:00:00.000000",
+ "modified_by": "Administrator",
+ "module": "Test Log",
+ "name": "Test Log Settings",
+ "owner": "Administrator",
+ "permissions": [
+  {
+   "create": 1,
+   "delete": 1,
+   "email": 1,
+   "print": 1,
+   "read": 1,
+   "role": "System Manager",
+   "share": 1,
+   "write": 1
+  },
+  {
+   "read": 1,
+   "role": "Tester"
+  },
+  {
+   "read": 1,
+   "role": "Developer"
+  }
+ ],
+ "sort_field": "modified",
+ "sort_order": "DESC",
+ "states": [],
+ "track_changes": 1
+}

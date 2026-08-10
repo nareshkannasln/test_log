@@ -30,13 +30,30 @@ after_install = "test_log.install.after_install"
 # Includes in <head>
 # ------------------
 
-# include js, css files in header of desk.html
-# app_include_css = "/assets/test_log/css/test_log.css"
-# app_include_js = "/assets/test_log/js/test_log.js"
+# The tester capture widget. Plain files rather than a bundle, so a site can be set up
+# and used offline without running a build first. Load order matters: core registers the
+# namespace, widget boots once everything else is on the page.
+_TESTER_WIDGET_JS = [
+	"/assets/test_log/js/tester/core.js",
+	"/assets/test_log/js/tester/store.js",
+	"/assets/test_log/js/tester/capture.js",
+	"/assets/test_log/js/tester/annotate.js",
+	"/assets/test_log/js/tester/panel.js",
+	"/assets/test_log/js/tester/widget.js",
+]
+_TESTER_WIDGET_CSS = ["/assets/test_log/css/tester.css"]
 
-# include js, css files in header of web template
-# web_include_css = "/assets/test_log/css/test_log.css"
-# web_include_js = "/assets/test_log/js/test_log.js"
+app_include_js = _TESTER_WIDGET_JS
+app_include_css = _TESTER_WIDGET_CSS
+
+# Portal pages are part of what gets tested too — the widget keeps itself hidden
+# unless the logged-in user is allowed to see it.
+web_include_js = _TESTER_WIDGET_JS
+web_include_css = _TESTER_WIDGET_CSS
+
+# Hands the widget its settings with the page, so it can draw itself before the first
+# request — and still work once the connection drops.
+extend_bootinfo = "test_log.boot.boot_session"
 
 # include custom scss in every website theme (without file extension ".scss")
 # website_theme_scss = "test_log/public/scss/website"

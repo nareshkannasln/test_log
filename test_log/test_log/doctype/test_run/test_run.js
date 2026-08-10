@@ -29,12 +29,34 @@ frappe.ui.form.on("Test Run", {
 			__("View")
 		);
 
+		frm.add_custom_button(__("Word Report"), () => build_report(frm), __("View"));
+
 		frm.add_custom_button(__("Share with Developer"), () => share_dialog(frm), __("Actions"));
 		frm.page.set_inner_btn_group_as_primary(__("Actions"));
 
 		render_status_bar(frm);
 	},
 });
+
+/** Builds the run's Word document — every log with its description and screenshots. */
+function build_report(frm) {
+	frappe.call({
+		method: "test_log.api.build_run_report",
+		args: { test_run: frm.doc.name },
+		freeze: true,
+		freeze_message: __("Building the report..."),
+		callback(r) {
+			if (!r.message?.file_url) return;
+
+			frappe.show_alert({
+				message: __("Report attached to this run"),
+				indicator: "green",
+			});
+			frm.reload_doc();
+			window.open(r.message.file_url, "_blank", "noopener");
+		},
+	});
+}
 
 function share_dialog(frm) {
 	const dialog = new frappe.ui.Dialog({

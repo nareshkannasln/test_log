@@ -5,14 +5,7 @@ import frappe
 from frappe.model.document import Document
 from frappe.query_builder.functions import Count
 
-STATUS_FIELD_MAP = {
-	"Open": "open_count",
-	"Reopened": "open_count",
-	"Ongoing": "ongoing_count",
-	"Fixed": "fixed_count",
-	"Completed": "completed_count",
-	"Won't Fix": "wont_fix_count",
-}
+from test_log.constants import RUN_COUNT_FIELDS
 
 
 def count_by_status(test_run: str | None = None):
@@ -32,13 +25,13 @@ class TestRun(Document):
 		"""Recount child test logs by status and cache the totals on this run."""
 		counts = count_by_status(self.name)
 
-		for fieldname in set(STATUS_FIELD_MAP.values()):
+		for fieldname in set(RUN_COUNT_FIELDS.values()):
 			self.set(fieldname, 0)
 		self.total_logs = 0
 
 		for row in counts:
 			self.total_logs += row.qty
-			fieldname = STATUS_FIELD_MAP.get(row.status)
+			fieldname = RUN_COUNT_FIELDS.get(row.status)
 			if fieldname:
 				self.set(fieldname, self.get(fieldname) + row.qty)
 

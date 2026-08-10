@@ -31,6 +31,16 @@
   "section_break_evidence",
   "attachments",
   "attachment_preview",
+  "section_break_capture",
+  "page_route",
+  "page_url",
+  "column_break_capture",
+  "viewport",
+  "logged_via",
+  "captured_at",
+  "client_id",
+  "section_break_console",
+  "console_errors",
   "section_break_dev",
   "resolution",
   "column_break_dev",
@@ -197,6 +207,76 @@
    "fieldname": "attachment_preview",
    "fieldtype": "HTML",
    "label": "Preview"
+  },
+  {
+   "collapsible": 1,
+   "fieldname": "section_break_capture",
+   "fieldtype": "Section Break",
+   "label": "Capture Context"
+  },
+  {
+   "description": "Where the tester was when they logged this.",
+   "fieldname": "page_route",
+   "fieldtype": "Data",
+   "label": "Page / Route"
+  },
+  {
+   "fieldname": "page_url",
+   "fieldtype": "Small Text",
+   "label": "Page URL"
+  },
+  {
+   "fieldname": "column_break_capture",
+   "fieldtype": "Column Break"
+  },
+  {
+   "fieldname": "viewport",
+   "fieldtype": "Data",
+   "label": "Viewport",
+   "read_only": 1
+  },
+  {
+   "default": "Desk",
+   "fieldname": "logged_via",
+   "fieldtype": "Select",
+   "in_standard_filter": 1,
+   "label": "Logged Via",
+   "options": "Desk\nTester Widget",
+   "read_only": 1
+  },
+  {
+   "description": "When the tester captured it. Earlier than the creation time if the entry waited in the offline queue.",
+   "fieldname": "captured_at",
+   "fieldtype": "Datetime",
+   "label": "Captured At",
+   "read_only": 1
+  },
+  {
+   "description": "Idempotency key from the capture widget — stops a queued entry being filed twice.",
+   "fieldname": "client_id",
+   "fieldtype": "Data",
+   "hidden": 1,
+   "label": "Client ID",
+   "no_copy": 1,
+   "print_hide": 1,
+   "read_only": 1,
+   "unique": 1
+  },
+  {
+   "collapsible": 1,
+   "collapsible_depends_on": "console_errors",
+   "depends_on": "console_errors",
+   "fieldname": "section_break_console",
+   "fieldtype": "Section Break",
+   "label": "Console Errors"
+  },
+  {
+   "description": "Recorded by the capture panel from the page the tester was on.",
+   "fieldname": "console_errors",
+   "fieldtype": "Code",
+   "label": "Errors Seen Before Logging",
+   "options": "Text",
+   "read_only": 1
   },
   {
    "fieldname": "section_break_dev",

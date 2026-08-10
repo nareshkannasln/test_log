@@ -1,0 +1,72 @@
+{
+ "app": "test_log",
+ "creation": "2026-08-07 14:56:47.530555",
+ "docstatus": 0,
+ "doctype": "Workspace Sidebar",
+ "header_icon": "review",
+ "idx": 0,
+ "items": [
+  {
+   "child": 0,
+   "collapsible": 1,
+   "indent": 0,
+   "keep_closed": 0,
+   "label": "Home",
+   "link_to": "Test Loggers",
+   "link_type": "Workspace",
+   "show_arrow": 0,
+   "type": "Link"
+  },
+  {
+   "child": 0,
+   "collapsible": 1,
+   "indent": 0,
+   "keep_closed": 0,
+   "label": "Test Log",
+   "link_to": "Test Log",
+   "link_type": "DocType",
+   "show_arrow": 0,
+   "type": "Link"
+  },
+  {
+   "child": 0,
+   "collapsible": 1,
+   "indent": 0,
+   "keep_closed": 0,
+   "label": "Test Run",
+   "link_to": "Test Run",
+   "link_type": "DocType",
+   "show_arrow": 0,
+   "type": "Link"
+  },
+  {
+   "child": 0,
+   "collapsible": 1,
+   "indent": 0,
+   "keep_closed": 0,
+   "label": "Assigned to Me",
+   "link_to": "Test Log",
+   "link_type": "DocType",
+   "show_arrow": 0,
+   "type": "Link"
+  },
+  {
+   "child": 0,
+   "collapsible": 1,
+   "indent": 0,
+   "keep_closed": 0,
+   "label": "Test Run Summary",
+   "link_to": "Test Run Summary",
+   "link_type": "Report",
+   "show_arrow": 0,
+   "type": "Link"
+  }
+ ],
+ "modified": "2026-08-10 18:49:50.665252",
+ "modified_by": "Administrator",
+ "module": "Test Log",
+ "name": "Test Log",
+ "owner": "Administrator",
+ "standard": 1,
+ "title": "Test Log"
+}

@@ -1,12 +1,13 @@
 {
+ "app": "test_log",
  "charts": [
   {
    "chart_name": "Test Logs by Status",
    "label": "Test Logs by Status"
   }
  ],
- "content": "[{\"id\": \"tl01\", \"type\": \"header\", \"data\": {\"text\": \"<span class=\\\"h4\\\"><b>Test Log</b></span>\", \"col\": 12}}, {\"id\": \"tl02\", \"type\": \"number_card\", \"data\": {\"number_card_name\": \"Open Test Logs\", \"col\": 3}}, {\"id\": \"tl03\", \"type\": \"number_card\", \"data\": {\"number_card_name\": \"Ongoing Test Logs\", \"col\": 3}}, {\"id\": \"tl04\", \"type\": \"number_card\", \"data\": {\"number_card_name\": \"Fixed Test Logs\", \"col\": 3}}, {\"id\": \"tl05\", \"type\": \"number_card\", \"data\": {\"number_card_name\": \"Completed Test Logs\", \"col\": 3}}, {\"id\": \"tl06\", \"type\": \"spacer\", \"data\": {\"col\": 12}}, {\"id\": \"tl07\", \"type\": \"chart\", \"data\": {\"chart_name\": \"Test Logs by Status\", \"col\": 12}}, {\"id\": \"tl08\", \"type\": \"header\", \"data\": {\"text\": \"<span class=\\\"h4\\\"><b>Shortcuts</b></span>\", \"col\": 12}}, {\"id\": \"tl09\", \"type\": \"shortcut\", \"data\": {\"shortcut_name\": \"Test Log\", \"col\": 3}}, {\"id\": \"tl10\", \"type\": \"shortcut\", \"data\": {\"shortcut_name\": \"Test Run\", \"col\": 3}}, {\"id\": \"tl11\", \"type\": \"shortcut\", \"data\": {\"shortcut_name\": \"Assigned to Me\", \"col\": 3}}, {\"id\": \"tl12\", \"type\": \"shortcut\", \"data\": {\"shortcut_name\": \"Test Run Summary\", \"col\": 3}}, {\"id\": \"tl13\", \"type\": \"header\", \"data\": {\"text\": \"<span class=\\\"h4\\\"><b>Masters &amp; Reports</b></span>\", \"col\": 12}}, {\"id\": \"tl14\", \"type\": \"card\", \"data\": {\"card_name\": \"Testing\", \"col\": 4}}]",
- "creation": "2026-08-07 10:00:00.000000",
+ "content": "[{\"id\": \"tl01\", \"type\": \"header\", \"data\": {\"text\": \"<span class=\\\"h4\\\"><b>Test Log</b></span>\", \"col\": 12}}, {\"id\": \"tl02\", \"type\": \"number_card\", \"data\": {\"number_card_name\": \"Open Test Logs\", \"col\": 3}}, {\"id\": \"tl03\", \"type\": \"number_card\", \"data\": {\"number_card_name\": \"Ongoing Test Logs\", \"col\": 3}}, {\"id\": \"tl04\", \"type\": \"number_card\", \"data\": {\"number_card_name\": \"Fixed Test Logs\", \"col\": 3}}, {\"id\": \"tl05\", \"type\": \"number_card\", \"data\": {\"number_card_name\": \"Completed Test Logs\", \"col\": 3}}, {\"id\": \"tl06\", \"type\": \"spacer\", \"data\": {\"col\": 12}}, {\"id\": \"tl07\", \"type\": \"chart\", \"data\": {\"chart_name\": \"Test Logs by Status\", \"col\": 12}}, {\"id\": \"tl08\", \"type\": \"header\", \"data\": {\"text\": \"<span class=\\\"h4\\\"><b>Shortcuts</b></span>\", \"col\": 12}}, {\"id\": \"tl09\", \"type\": \"shortcut\", \"data\": {\"shortcut_name\": \"Test Log\", \"col\": 3}}, {\"id\": \"tl10\", \"type\": \"shortcut\", \"data\": {\"shortcut_name\": \"Test Run\", \"col\": 3}}, {\"id\": \"tl11\", \"type\": \"shortcut\", \"data\": {\"shortcut_name\": \"Assigned to Me\", \"col\": 3}}, {\"id\": \"tl12\", \"type\": \"shortcut\", \"data\": {\"shortcut_name\": \"Test Run Summary\", \"col\": 3}}, {\"id\": \"tl13\", \"type\": \"header\", \"data\": {\"text\": \"<span class=\\\"h4\\\"><b>Masters &amp; Reports</b></span>\", \"col\": 12}}, {\"id\": \"tl14\", \"type\": \"card\", \"data\": {\"card_name\": \"Testing\", \"col\": 4}}, {\"id\": \"tl15\", \"type\": \"card\", \"data\": {\"card_name\": \"Settings\", \"col\": 4}}]",
+ "creation": "2026-08-07 10:00:00",
  "custom_blocks": [],
  "docstatus": 0,
  "doctype": "Workspace",
@@ -15,7 +16,9 @@
  "icon": "review",
  "idx": 0,
  "is_hidden": 0,
- "label": "Test Log",
+ "label": "Test Loggers",
+ "link_to": "Test Log",
+ "link_type": "DocType",
  "links": [
   {
    "hidden": 0,
@@ -68,12 +71,31 @@
    "link_type": "Report",
    "onboard": 0,
    "type": "Link"
+  },
+  {
+   "hidden": 0,
+   "is_query_report": 0,
+   "label": "Settings",
+   "link_count": 0,
+   "onboard": 0,
+   "type": "Card Break"
+  },
+  {
+   "dependencies": "",
+   "hidden": 0,
+   "is_query_report": 0,
+   "label": "Test Log Settings",
+   "link_count": 0,
+   "link_to": "Test Log Settings",
+   "link_type": "DocType",
+   "onboard": 0,
+   "type": "Link"
   }
  ],
- "modified": "2026-08-07 10:00:00.000000",
+ "modified": "2026-08-10 18:49:19.203500",
  "modified_by": "Administrator",
  "module": "Test Log",
- "name": "Test Log",
+ "name": "Test Loggers",
  "number_cards": [
   {
    "label": "Open Test Logs",
@@ -126,8 +148,10 @@
    "color": "Grey",
    "label": "Test Run Summary",
    "link_to": "Test Run Summary",
+   "report_ref_doctype": "Test Log",
    "type": "Report"
   }
  ],
- "title": "Test Log"
+ "title": "Test Loggers",
+ "type": "Link"
 }

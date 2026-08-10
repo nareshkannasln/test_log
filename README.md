@@ -117,6 +117,11 @@ There is the same button on a single Test Log, and one in the capture panel's he
 being tested. The document is attached to the record it describes, replacing the previous copy
 rather than piling up, so the sheet and its evidence travel together.
 
+For a handover that is a few findings from here and there rather than a whole run, tick them in
+the Test Log list and use *Actions → Word Report*: one document with a contents page listing what
+is in it, then a page per log with its evidence. Logs the tester cannot read are left out and
+reported rather than failing the export.
+
 Turn on **Keep a Report Attached to Each Run** in the settings and the run's document is refreshed
 in the background whenever one of its logs changes — deduplicated per run, so a burst of entries
 rebuilds it once.

@@ -26,8 +26,43 @@ frappe.listview_settings["Test Log"] = {
 				true
 			);
 		});
+
+		listview.page.add_actions_menu_item(
+			__("Word Report"),
+			() => selection_report(listview),
+			true
+		);
 	},
 };
+
+/** Ticked logs, gathered into one Word document with their evidence. */
+function selection_report(listview) {
+	const names = listview.get_checked_items(true);
+	if (!names.length) {
+		frappe.msgprint(__("Select the test logs you want in the report."));
+		return;
+	}
+
+	frappe.call({
+		method: "test_log.api.build_selection_report",
+		args: { names },
+		freeze: true,
+		freeze_message: __("Building a report of {0} logs...", [names.length]),
+		callback(r) {
+			if (!r.message?.file_url) return;
+
+			const skipped = r.message.skipped;
+			frappe.show_alert({
+				message: skipped
+					? __("{0} logs in the report, {1} skipped — no access", [r.message.logs, skipped])
+					: __("{0} logs in the report", [r.message.logs]),
+				indicator: skipped ? "orange" : "green",
+			});
+
+			window.open(r.message.file_url, "_blank", "noopener");
+		},
+	});
+}
 
 function bulk_update(listview, status) {
 	const names = listview.get_checked_items(true);

@@ -14,12 +14,13 @@ from test_log.api.capture import (
 	get_feed,
 	log_entry,
 )
-from test_log.api.report import build_log_report, build_run_report
+from test_log.api.report import build_log_report, build_run_report, build_selection_report
 from test_log.api.sharing import get_run_stats, share_run
 
 __all__ = (
 	"build_log_report",
 	"build_run_report",
+	"build_selection_report",
 	"create_run",
 	"get_config",
 	"get_feed",

@@ -36,7 +36,9 @@
   "column_break_offline",
   "sync_interval_seconds",
   "section_break_report",
-  "auto_attach_run_report"
+  "auto_attach_run_report",
+  "column_break_report",
+  "include_evidence_links"
  ],
  "fields": [
   {
@@ -230,7 +232,7 @@
   {
    "fieldname": "section_break_report",
    "fieldtype": "Section Break",
-   "label": "Word Report"
+   "label": "Reports & Exports"
   },
   {
    "default": "0",
@@ -238,6 +240,17 @@
    "fieldname": "auto_attach_run_report",
    "fieldtype": "Check",
    "label": "Keep a Report Attached to Each Run"
+  },
+  {
+   "fieldname": "column_break_report",
+   "fieldtype": "Column Break"
+  },
+  {
+   "default": "1",
+   "description": "Adds a column of clickable links to screenshots, recordings and external links in the Excel export. Leave off for a sheet of issue descriptions only.",
+   "fieldname": "include_evidence_links",
+   "fieldtype": "Check",
+   "label": "Include Evidence Links in Excel"
   }
  ],
  "index_web_pages_for_search": 1,

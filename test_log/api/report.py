@@ -8,13 +8,11 @@ files are linked, since Word cannot play them. The result is attached to the rec
 describes, so the sheet and its evidence travel together.
 """
 
-import html
-import re
-
 import frappe
 from frappe import _
-from frappe.utils import format_datetime, get_url, strip_html_tags
+from frappe.utils import format_datetime, get_url
 
+from test_log.api.artifacts import deliver, plain_text
 from test_log.constants import IMAGE_EXTENSIONS
 from test_log.docx import Document
 
@@ -40,7 +38,7 @@ def build_run_report(test_run: str, attach: int = 1):
 
 	_write_logs(document, logs)
 
-	return _deliver(document, run, f"{REPORT_PREFIX} - {run.name}.docx", int(attach))
+	return deliver(document.render(), run, f"{REPORT_PREFIX} - {run.name}.docx", int(attach))
 
 
 @frappe.whitelist()
@@ -70,7 +68,7 @@ def build_selection_report(names: str | list, attach: int = 0):
 
 	file_name = f"{REPORT_PREFIX} - {len(readable)} logs.docx"
 
-	return _deliver(document, None, file_name, int(attach)) | {
+	return deliver(document.render(), None, file_name, int(attach)) | {
 		"logs": len(readable),
 		"skipped": len(names) - len(readable),
 	}
@@ -102,7 +100,7 @@ def build_log_report(test_log: str, attach: int = 1):
 	)
 	_log_section(document, log, with_heading=False)
 
-	return _deliver(document, log, f"{REPORT_PREFIX} - {log.name}.docx", int(attach))
+	return deliver(document.render(), log, f"{REPORT_PREFIX} - {log.name}.docx", int(attach))
 
 
 # ------------------------------------------------------------------ sections
@@ -161,7 +159,7 @@ def _run_cover(document: Document, run, log_count: int):
 	if run.description:
 		document.paragraph("")
 		document.heading(_("What is being tested"), level=2)
-		document.paragraph(_plain_text(run.description))
+		document.paragraph(plain_text(run.description))
 
 	document.rule()
 
@@ -206,7 +204,7 @@ def _log_section(document: Document, log, with_heading: bool = True):
 
 
 def _block(document: Document, title, value):
-	text = _plain_text(value)
+	text = plain_text(value)
 	if not text:
 		return
 
@@ -286,55 +284,6 @@ def _readable_size(size: int) -> str:
 		size /= 1024
 
 	return str(size)
-
-
-def _plain_text(value) -> str:
-	"""Text Editor fields hold HTML; the report wants readable lines."""
-	if not value:
-		return ""
-
-	text = re.sub(r"<\s*br\s*/?>", "\n", str(value), flags=re.IGNORECASE)
-	text = re.sub(r"</\s*(p|div|li|h\d)\s*>", "\n", text, flags=re.IGNORECASE)
-	text = strip_html_tags(text)
-
-	return html.unescape(text).strip()
-
-
-def _deliver(document: Document, doc, file_name: str, attach: int):
-	"""Write the document out as a File — attached to the record unless asked otherwise.
-
-	Attaching replaces the previous report rather than piling up a new copy each time.
-	A selection of logs has no record to hang off, so it becomes a private file owned by
-	whoever asked for it.
-	"""
-	attach = bool(attach and doc)
-	target = (
-		{"attached_to_doctype": doc.doctype, "attached_to_name": doc.name} if attach else {}
-	)
-
-	if attach:
-		for existing in frappe.get_all(
-			"File",
-			filters={
-				"attached_to_doctype": doc.doctype,
-				"attached_to_name": doc.name,
-				"file_name": file_name,
-			},
-			pluck="name",
-		):
-			frappe.delete_doc("File", existing, ignore_permissions=True, force=True)
-
-	file = frappe.get_doc(
-		{
-			"doctype": "File",
-			"file_name": file_name,
-			"is_private": 1,
-			"content": document.render(),
-			**target,
-		}
-	).insert(ignore_permissions=True)
-
-	return {"file_name": file_name, "file_url": file.file_url, "size": file.file_size}
 
 
 def refresh_run_report(test_run: str):

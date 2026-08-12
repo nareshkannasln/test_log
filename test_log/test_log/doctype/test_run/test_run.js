@@ -31,6 +31,8 @@ frappe.ui.form.on("Test Run", {
 
 		frm.add_custom_button(__("Word Report"), () => build_report(frm), __("View"));
 
+		frm.add_custom_button(__("Excel Sheet"), () => build_sheet(frm), __("View"));
+
 		frm.add_custom_button(__("Share with Developer"), () => share_dialog(frm), __("Actions"));
 		frm.page.set_inner_btn_group_as_primary(__("Actions"));
 
@@ -53,6 +55,25 @@ function build_report(frm) {
 				indicator: "green",
 			});
 			frm.reload_doc();
+			window.open(r.message.file_url, "_blank", "noopener");
+		},
+	});
+}
+
+/** The run's logs as a spreadsheet — one row each, description and linked evidence. */
+function build_sheet(frm) {
+	frappe.call({
+		method: "test_log.api.build_run_sheet",
+		args: { test_run: frm.doc.name },
+		freeze: true,
+		freeze_message: __("Building the sheet..."),
+		callback(r) {
+			if (!r.message?.file_url) return;
+
+			frappe.show_alert({
+				message: __("{0} logs in the sheet", [r.message.logs]),
+				indicator: "green",
+			});
 			window.open(r.message.file_url, "_blank", "noopener");
 		},
 	});

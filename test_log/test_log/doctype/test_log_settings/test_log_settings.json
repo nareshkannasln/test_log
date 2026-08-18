@@ -35,6 +35,15 @@
   "enable_offline_queue",
   "column_break_offline",
   "sync_interval_seconds",
+  "section_break_workflow",
+  "enforce_status_flow",
+  "block_signed_off_runs",
+  "column_break_workflow",
+  "warn_on_duplicates",
+  "section_break_reminders",
+  "notify_overdue_logs",
+  "column_break_reminders",
+  "send_daily_digest",
   "section_break_report",
   "auto_attach_run_report",
   "column_break_report",
@@ -251,12 +260,65 @@
    "fieldname": "include_evidence_links",
    "fieldtype": "Check",
    "label": "Include Evidence Links in Excel"
+  },
+  {
+   "fieldname": "section_break_workflow",
+   "fieldtype": "Section Break",
+   "label": "Workflow"
+  },
+  {
+   "default": "1",
+   "description": "Only allow the status moves the app offers — Open cannot jump straight to Completed.",
+   "fieldname": "enforce_status_flow",
+   "fieldtype": "Check",
+   "label": "Enforce Status Flow"
+  },
+  {
+   "default": "1",
+   "description": "Stop new logs being filed against a run that has been signed off.",
+   "fieldname": "block_signed_off_runs",
+   "fieldtype": "Check",
+   "label": "Freeze Signed-off Runs"
+  },
+  {
+   "fieldname": "column_break_workflow",
+   "fieldtype": "Column Break"
+  },
+  {
+   "default": "1",
+   "description": "Show similar logs already filed in the same run before one more is added.",
+   "fieldname": "warn_on_duplicates",
+   "fieldtype": "Check",
+   "label": "Warn About Possible Duplicates"
+  },
+  {
+   "fieldname": "section_break_reminders",
+   "fieldtype": "Section Break",
+   "label": "Reminders"
+  },
+  {
+   "default": "0",
+   "description": "A daily nudge to the developer when a log is past its target date and still unresolved.",
+   "fieldname": "notify_overdue_logs",
+   "fieldtype": "Check",
+   "label": "Chase Overdue Logs"
+  },
+  {
+   "fieldname": "column_break_reminders",
+   "fieldtype": "Column Break"
+  },
+  {
+   "default": "0",
+   "description": "One daily summary per developer of the logs waiting on them.",
+   "fieldname": "send_daily_digest",
+   "fieldtype": "Check",
+   "label": "Send a Daily Digest"
   }
  ],
  "index_web_pages_for_search": 1,
  "issingle": 1,
  "links": [],
- "modified": "2026-08-10 10:00:00.000000",
+ "modified": "2026-08-18 10:00:00.000000",
  "modified_by": "Administrator",
  "module": "Test Log",
  "name": "Test Log Settings",

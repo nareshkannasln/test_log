@@ -65,7 +65,10 @@ def log_entry(entry: str | dict):
 
 	_claim_files(doc)
 
-	return _feed_row(doc.name)
+	row = _feed_row(doc.name)
+	row.similar = _similar_to(doc)
+
+	return row
 
 
 @frappe.whitelist()
@@ -102,6 +105,29 @@ def create_run(title: str, product: str, build_version: str | None = None):
 	).insert()
 
 	return {"name": run.name, "title": run.title, "product": run.product, "build_version": run.build_version}
+
+
+def _similar_to(doc) -> list:
+	"""Logs already filed that look like this one.
+
+	Checked after the entry is saved rather than before: the tester is mid-test and
+	should never be stopped by a dialog, but the panel can say "this looks like
+	TL-2026-00031" on the entry it just filed, and they can merge the two later.
+	"""
+	from test_log.test_log.doctype.test_log.test_log import find_similar
+
+	try:
+		return find_similar(
+			subject=doc.subject,
+			test_run=doc.test_run,
+			product=doc.product,
+			module_feature=doc.module_feature,
+			page_route=doc.page_route,
+			exclude=doc.name,
+		)
+	except Exception:
+		# A duplicate hint is a nicety; never let it cost the tester their entry.
+		return []
 
 
 # ------------------------------------------------------------------ building the log
@@ -269,9 +295,7 @@ def _feed_row(name: str, duplicate: bool = False) -> dict:
 		"file_url",
 		order_by="idx asc",
 	)
-	log.evidence_count = frappe.db.count(
-		"Test Log Attachment", {"parent": name, "parenttype": "Test Log"}
-	)
+	log.evidence_count = frappe.db.count("Test Log Attachment", {"parent": name, "parenttype": "Test Log"})
 
 	return log
 

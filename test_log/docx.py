@@ -167,7 +167,7 @@ class Document:
 			'<wp:effectExtent l="0" t="0" r="0" b="0"/>'
 			f'<wp:docPr id="{shape_id}" name="Picture {shape_id}"/>'
 			'<wp:cNvGraphicFramePr><a:graphicFrameLocks noChangeAspect="1"/></wp:cNvGraphicFramePr>'
-			"<a:graphic><a:graphicData uri=\"http://schemas.openxmlformats.org/drawingml/2006/picture\">"
+			'<a:graphic><a:graphicData uri="http://schemas.openxmlformats.org/drawingml/2006/picture">'
 			"<pic:pic><pic:nvPicPr>"
 			f'<pic:cNvPr id="{shape_id}" name="{_clean(name)}"/><pic:cNvPicPr/>'
 			"</pic:nvPicPr>"

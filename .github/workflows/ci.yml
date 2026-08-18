@@ -1,0 +1,101 @@
+name: CI
+
+on:
+  push:
+    branches: [main, develop]
+  pull_request:
+
+concurrency:
+  group: ci-${{ github.event.pull_request.number || github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  tests:
+    name: Server tests
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+
+    services:
+      mariadb:
+        image: mariadb:11.4
+        env:
+          MARIADB_ROOT_PASSWORD: root
+        ports:
+          - 3306:3306
+        options: >-
+          --health-cmd="healthcheck.sh --connect --innodb_initialized"
+          --health-interval=10s
+          --health-timeout=5s
+          --health-retries=10
+
+      redis:
+        image: redis:alpine
+        ports:
+          - 6379:6379
+
+    steps:
+      - name: Check out the app
+        uses: actions/checkout@v4
+        with:
+          path: apps/test_log
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.14"
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "24"
+
+      - name: Install bench
+        run: |
+          pip install frappe-bench
+          sudo apt-get update
+          sudo apt-get install -y --no-install-recommends mariadb-client
+
+      - name: Set up a bench with Frappe v16
+        run: |
+          bench init --skip-redis-config-generation --skip-assets \
+            --frappe-branch version-16 --python "$(which python)" ~/frappe-bench
+          cd ~/frappe-bench
+          bench set-config -g redis_cache redis://localhost:6379
+          bench set-config -g redis_queue redis://localhost:6379
+          bench set-config -g redis_socketio redis://localhost:6379
+          bench set-config -g developer_mode 1
+
+      - name: Bring the app in
+        # get-app rather than a copy: it is what registers the app in apps.txt and
+        # installs its requirements, which install-app then needs.
+        run: |
+          cd ~/frappe-bench
+          bench get-app --skip-assets test_log "$GITHUB_WORKSPACE/apps/test_log"
+
+      - name: Create the site and install the app
+        run: |
+          cd ~/frappe-bench
+          bench new-site test_site \
+            --mariadb-root-password root \
+            --admin-password admin \
+            --mariadb-user-host-login-scope='%'
+          bench --site test_site install-app test_log
+          bench --site test_site set-config allow_tests true
+
+      - name: Run the tests
+        run: |
+          cd ~/frappe-bench
+          bench --site test_site run-tests --app test_log
+
+  lint:
+    name: Lint
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.14"
+
+      - name: Run pre-commit
+        uses: pre-commit/action@v3.0.1

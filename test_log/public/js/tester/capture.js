@@ -82,7 +82,10 @@
 	}
 
 	function recordingUnavailableReason() {
-		return unavailableReason() || (window.MediaRecorder ? null : t("This browser cannot record video."));
+		return (
+			unavailableReason() ||
+			(window.MediaRecorder ? null : t("This browser cannot record video."))
+		);
 	}
 
 	function recordingSupported() {
@@ -143,7 +146,8 @@
 
 		while (Date.now() < deadline) {
 			const [width, height] = frameSize(video, track);
-			if (width > PLACEHOLDER_SIZE && height > PLACEHOLDER_SIZE && video.readyState >= 2) return;
+			if (width > PLACEHOLDER_SIZE && height > PLACEHOLDER_SIZE && video.readyState >= 2)
+				return;
 
 			await nextFrame(video);
 		}
@@ -182,7 +186,9 @@
 
 			const [width, height] = frameSize(video, track);
 			if (width <= PLACEHOLDER_SIZE || height <= PLACEHOLDER_SIZE) {
-				throw new Error(t("The captured screen came back empty. Try picking a window instead."));
+				throw new Error(
+					t("The captured screen came back empty. Try picking a window instead.")
+				);
 			}
 
 			const canvas = document.createElement("canvas");
@@ -234,7 +240,13 @@
 	 * Start recording. Resolves with a handle once the tester has picked a surface;
 	 * `onStop` fires with the finished item, or with null if it was cancelled.
 	 */
-	async function record({ withMic = false, limitSeconds = 0, maxBytes = 0, onTick, onStop } = {}) {
+	async function record({
+		withMic = false,
+		limitSeconds = 0,
+		maxBytes = 0,
+		onTick,
+		onStop,
+	} = {}) {
 		const blocked = recordingUnavailableReason();
 		if (blocked) throw new Error(blocked);
 
@@ -355,7 +367,8 @@
 
 		return files.map((file) =>
 			makeItem(file, {
-				file_name: file.name && file.name !== "image.png" ? file.name : `pasted-${stamp()}.png`,
+				file_name:
+					file.name && file.name !== "image.png" ? file.name : `pasted-${stamp()}.png`,
 			})
 		);
 	}

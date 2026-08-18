@@ -47,7 +47,17 @@
 		canvas.height = Math.max(1, Math.round(height));
 		canvas
 			.getContext("2d")
-			.drawImage(source, sx, sy, sw ?? source.width, sh ?? source.height, 0, 0, canvas.width, canvas.height);
+			.drawImage(
+				source,
+				sx,
+				sy,
+				sw ?? source.width,
+				sh ?? source.height,
+				0,
+				0,
+				canvas.width,
+				canvas.height
+			);
 		return canvas;
 	}
 
@@ -199,8 +209,24 @@
 					tool === "pen"
 						? { type: "pen", points: [[x, y]], color, width: strokeWidth() }
 						: tool === "arrow"
-						? { type: "arrow", x1: x, y1: y, x2: x, y2: y, color, width: strokeWidth() }
-						: { type: tool === "crop" ? "crop" : tool, x, y, w: 0, h: 0, color, width: strokeWidth() };
+						? {
+								type: "arrow",
+								x1: x,
+								y1: y,
+								x2: x,
+								y2: y,
+								color,
+								width: strokeWidth(),
+						  }
+						: {
+								type: tool === "crop" ? "crop" : tool,
+								x,
+								y,
+								w: 0,
+								h: 0,
+								color,
+								width: strokeWidth(),
+						  };
 
 				render();
 			});
@@ -225,14 +251,19 @@
 				if (shape.type === "crop") {
 					applyCrop(shape);
 				} else if (shape.type === "pen" ? shape.points.length > 1 : hasSize(shape)) {
-					shapes.push(shape.type === "pixelate" ? { ...normalise(shape), type: "pixelate" } : shape);
+					shapes.push(
+						shape.type === "pixelate"
+							? { ...normalise(shape), type: "pixelate" }
+							: shape
+					);
 				}
 
 				render();
 			});
 
 			function hasSize(shape) {
-				if (shape.type === "arrow") return Math.hypot(shape.x2 - shape.x1, shape.y2 - shape.y1) > 8;
+				if (shape.type === "arrow")
+					return Math.hypot(shape.x2 - shape.x1, shape.y2 - shape.y1) > 8;
 				return Math.abs(shape.w) > 6 && Math.abs(shape.h) > 6;
 			}
 
@@ -258,7 +289,9 @@
 
 			function setTool(name) {
 				tool = name;
-				toolButtons.forEach((button, key) => button.classList.toggle("is-active", key === name));
+				toolButtons.forEach((button, key) =>
+					button.classList.toggle("is-active", key === name)
+				);
 				hint.textContent =
 					name === "crop"
 						? t("Drag over the part you want to keep.")
@@ -294,7 +327,9 @@
 						color = swatch;
 						toolbar
 							.querySelectorAll(".tl-swatch")
-							.forEach((node) => node.classList.toggle("is-active", node.title === swatch));
+							.forEach((node) =>
+								node.classList.toggle("is-active", node.title === swatch)
+							);
 					},
 				});
 				if (swatch === color) button.classList.add("is-active");
@@ -305,7 +340,11 @@
 				el("span", { class: "tl-annotate-sep" }),
 				el("button", { type: "button", class: "tl-btn", onclick: undo }, t("Undo")),
 				el("span", { class: "tl-annotate-spacer" }),
-				el("button", { type: "button", class: "tl-btn", onclick: () => close(null) }, t("Cancel")),
+				el(
+					"button",
+					{ type: "button", class: "tl-btn", onclick: () => close(null) },
+					t("Cancel")
+				),
 				el(
 					"button",
 					{ type: "button", class: "tl-btn tl-btn-primary", onclick: () => finish() },

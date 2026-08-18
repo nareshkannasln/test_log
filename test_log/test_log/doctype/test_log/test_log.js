@@ -4,16 +4,53 @@
 const IMAGE_EXTENSIONS = ["png", "jpg", "jpeg", "gif", "webp", "bmp", "svg", "avif"];
 const VIDEO_EXTENSIONS = ["mp4", "webm", "mov", "m4v", "ogv"];
 
+// Only reached on a page that booted before the app was migrated; the live copy comes
+// from test_log/constants.py through the boot info.
+const FALLBACK_TRANSITIONS = {
+	Open: ["Ongoing", "Needs Info", "Won't Fix"],
+	Reopened: ["Ongoing", "Needs Info", "Won't Fix"],
+	Ongoing: ["Fixed", "Needs Info", "Won't Fix"],
+	"Needs Info": ["Open", "Ongoing", "Won't Fix"],
+	Fixed: ["Completed", "Reopened"],
+	Completed: ["Reopened"],
+	"Won't Fix": ["Reopened"],
+};
+
+// A status change that is really a question or an explanation, and what to ask for.
+const STATUS_PROMPTS = {
+	Fixed: { field: "resolution", label: __("What changed?") },
+	"Won't Fix": { field: "resolution", label: __("Why is this being left?") },
+	"Needs Info": { field: "note", label: __("What do you need to know?") },
+	Reopened: { field: "note", label: __("What is still wrong?") },
+};
+
 frappe.ui.form.on("Test Log", {
 	refresh(frm) {
 		frm.trigger("render_evidence");
 		frm.trigger("add_status_actions");
 		frm.trigger("add_share_action");
+		frm.trigger("show_similar");
 
 		if (frm.doc.assigned_developer && !frm.is_new()) {
 			frm.dashboard.add_indicator(
 				__("Assigned to {0}", [frm.doc.assigned_developer]),
 				"blue"
+			);
+		}
+
+		if (frm.doc.verified_by) {
+			frm.dashboard.add_indicator(__("Verified by {0}", [frm.doc.verified_by]), "green");
+		}
+
+		if (frm.doc.duplicate_of) {
+			frm.dashboard.add_comment(
+				__("Marked as a duplicate of {0}.", [
+					`<a href="/app/test-log/${encodeURIComponent(
+						frm.doc.duplicate_of
+					)}">${frappe.utils.escape_html(frm.doc.duplicate_of)}</a>`,
+				]),
+				"blue",
+				true
 			);
 		}
 	},
@@ -25,14 +62,10 @@ frappe.ui.form.on("Test Log", {
 	add_status_actions(frm) {
 		if (frm.is_new()) return;
 
-		const transitions = {
-			Open: ["Ongoing", "Won't Fix"],
-			Reopened: ["Ongoing", "Won't Fix"],
-			Ongoing: ["Fixed", "Won't Fix"],
-			Fixed: ["Completed", "Reopened"],
-			Completed: ["Reopened"],
-			"Won't Fix": ["Reopened"],
-		};
+		// The same map the server validates against, shipped with the boot info — so a
+		// button is never offered for a move that will be refused on save.
+		const transitions =
+			frappe.boot.test_log_vocabulary?.status_transitions || FALLBACK_TRANSITIONS;
 
 		(transitions[frm.doc.status] || []).forEach((status) => {
 			frm.add_custom_button(
@@ -92,7 +125,9 @@ frappe.ui.form.on("Test Log", {
 						if (values.note) {
 							frm.set_value(
 								"resolution",
-								`${frm.doc.resolution || ""}<p>${frappe.utils.escape_html(values.note)}</p>`
+								`${frm.doc.resolution || ""}<p>${frappe.utils.escape_html(
+									values.note
+								)}</p>`
 							);
 						}
 						frm.save();
@@ -102,13 +137,78 @@ frappe.ui.form.on("Test Log", {
 			},
 			__("Actions")
 		);
+
+		frm.add_custom_button(__("Add Note"), () => add_note(frm), __("Actions"));
+
+		// The product's repository, if one is recorded — saves hunting for it when a
+		// developer picks the log up.
+		if (frm.doc.product) {
+			frappe.db.get_value("Test Product", frm.doc.product, "repository_url").then((r) => {
+				const url = r?.message?.repository_url;
+				if (!url) return;
+
+				frm.add_custom_button(
+					__("Open Repository"),
+					() => window.open(url, "_blank", "noopener"),
+					__("Actions")
+				);
+			});
+		}
+	},
+
+	/** Logs that look like this one — the same finding filed twice is the usual mess. */
+	show_similar(frm) {
+		if (frm.is_new() || frm.doc.duplicate_of) return;
+
+		frappe.call({
+			method: "test_log.api.find_similar",
+			args: {
+				subject: frm.doc.subject,
+				test_run: frm.doc.test_run,
+				product: frm.doc.product,
+				module_feature: frm.doc.module_feature,
+				page_route: frm.doc.page_route,
+				exclude: frm.doc.name,
+			},
+			callback(r) {
+				const similar = r.message || [];
+				if (!similar.length) return;
+
+				const links = similar
+					.map(
+						(log) =>
+							`<a href="/app/test-log/${encodeURIComponent(
+								log.name
+							)}">${frappe.utils.escape_html(
+								log.name
+							)}</a> — ${frappe.utils.escape_html(log.subject || "")} (${__(
+								log.status
+							)})`
+					)
+					.join("<br>");
+
+				frm.dashboard.add_comment(
+					`<b>${__("Possible duplicates")}</b><br>${links}`,
+					"yellow",
+					true
+				);
+
+				frm.add_custom_button(
+					__("Mark as Duplicate"),
+					() => mark_duplicate(frm, similar),
+					__("Actions")
+				);
+			},
+		});
 	},
 
 	render_evidence(frm) {
 		const wrapper = frm.get_field("attachment_preview").$wrapper;
 		wrapper.empty();
 
-		const rows = (frm.doc.attachments || []).filter((row) => row.file_url || row.external_link);
+		const rows = (frm.doc.attachments || []).filter(
+			(row) => row.file_url || row.external_link
+		);
 		if (!rows.length) {
 			wrapper.html(
 				`<div class="text-muted small">${__(
@@ -186,12 +286,17 @@ function build_evidence_card(row) {
 }
 
 function update_status(frm, status) {
-	const needs_note = ["Fixed", "Won't Fix"].includes(status);
+	const ask = STATUS_PROMPTS[status];
 
-	const apply = (resolution) =>
+	const apply = (values = {}) =>
 		frappe.call({
 			method: "test_log.test_log.doctype.test_log.test_log.set_status",
-			args: { name: frm.doc.name, status, resolution },
+			args: {
+				name: frm.doc.name,
+				status,
+				resolution: values.resolution,
+				note: values.note,
+			},
 			freeze: true,
 			freeze_message: __("Updating status..."),
 			callback: () => {
@@ -200,22 +305,66 @@ function update_status(frm, status) {
 			},
 		});
 
-	if (!needs_note) {
+	if (!ask) {
 		apply();
 		return;
 	}
 
+	// A note goes to the timeline and notifies the other party; a resolution is the
+	// developer's summary and stays on the record.
 	frappe.prompt(
 		[
 			{
-				fieldname: "resolution",
-				fieldtype: "Text Editor",
-				label: __("What changed?"),
-				default: frm.doc.resolution,
+				fieldname: ask.field,
+				fieldtype: ask.field === "resolution" ? "Text Editor" : "Small Text",
+				label: ask.label,
+				default: ask.field === "resolution" ? frm.doc.resolution : "",
+				reqd: ask.field === "note" ? 1 : 0,
 			},
 		],
-		(values) => apply(values.resolution),
+		(values) => apply(values),
 		__("Mark {0}", [__(status)]),
 		__("Update")
+	);
+}
+
+/** A comment on the log that reaches the person on the other side of it. */
+function add_note(frm) {
+	frappe.prompt(
+		[{ fieldname: "note", fieldtype: "Small Text", label: __("Note"), reqd: 1 }],
+		(values) =>
+			frappe.call({
+				method: "test_log.api.add_note",
+				args: { name: frm.doc.name, note: values.note },
+				callback: () => {
+					frappe.show_alert({ message: __("Note added"), indicator: "green" });
+					frm.reload_doc();
+				},
+			}),
+		__("Add a note"),
+		__("Post")
+	);
+}
+
+/** Point this log at the one it repeats, so the run is not counted twice. */
+function mark_duplicate(frm, similar) {
+	frappe.prompt(
+		[
+			{
+				fieldname: "duplicate_of",
+				fieldtype: "Link",
+				options: "Test Log",
+				label: __("Duplicate of"),
+				reqd: 1,
+				default: similar[0]?.name,
+				get_query: () => ({ filters: { name: ["!=", frm.doc.name] } }),
+			},
+		],
+		(values) => {
+			frm.set_value("duplicate_of", values.duplicate_of);
+			frm.save();
+		},
+		__("Mark as duplicate"),
+		__("Mark")
 	);
 }

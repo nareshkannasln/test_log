@@ -64,7 +64,11 @@
 			"select",
 			{ class: "tl-select", title: t("Severity"), onchange: () => saveDraft() },
 			(vocabulary.severities || ["Low", "Medium", "High", "Critical"]).map((value) =>
-				el("option", { value, selected: value === (defaults.severity || "Medium") }, t(value))
+				el(
+					"option",
+					{ value, selected: value === (defaults.severity || "Medium") },
+					t(value)
+				)
 			)
 		);
 
@@ -72,7 +76,11 @@
 			"select",
 			{ class: "tl-select", title: t("Test type"), onchange: () => saveDraft() },
 			(vocabulary.test_types || ["Functional"]).map((value) =>
-				el("option", { value, selected: value === (defaults.test_type || "Functional") }, t(value))
+				el(
+					"option",
+					{ value, selected: value === (defaults.test_type || "Functional") },
+					t(value)
+				)
 			)
 		);
 
@@ -144,39 +152,71 @@
 			class: "tl-note",
 			hidden: !captureBlocked,
 			text: captureBlocked
-				? `${captureBlocked} ${t("Pasting a screenshot from your own snipping tool still works.")}`
+				? `${captureBlocked} ${t(
+						"Pasting a screenshot from your own snipping tool still works."
+				  )}`
 				: "",
 		});
 
 		const toolRow = el("div", { class: "tl-tools" }, [
-			toolButton("camera", t("Screenshot"), takeScreenshot, tools.screenshot !== false, captureBlocked),
-			toolButton("scissors", t("Snip & annotate"), snip, tools.snip !== false, captureBlocked),
-			toolButton("record", t("Record screen"), startRecording, tools.recording !== false, recordBlocked),
-			toolButton("paperclip", t("Attach a file"), () => fileInput.click(), tools.attach !== false),
+			toolButton(
+				"camera",
+				t("Screenshot"),
+				takeScreenshot,
+				tools.screenshot !== false,
+				captureBlocked
+			),
+			toolButton(
+				"scissors",
+				t("Snip & annotate"),
+				snip,
+				tools.snip !== false,
+				captureBlocked
+			),
+			toolButton(
+				"record",
+				t("Record screen"),
+				startRecording,
+				tools.recording !== false,
+				recordBlocked
+			),
+			toolButton(
+				"paperclip",
+				t("Attach a file"),
+				() => fileInput.click(),
+				tools.attach !== false
+			),
 			el("span", { class: "tl-spacer" }),
 			severitySelect,
 			detailsToggle,
 			submitButton,
 		]);
 
-		const composer = el("form", { class: "tl-composer", onsubmit: onSubmit, onkeydown: guardEnter }, [
-			recordBar,
-			thumbs,
-			textarea,
-			details,
-			el("div", { class: "tl-meta-row" }, [
-				el("label", { class: "tl-inline-label", text: t("Type") }),
-				typeSelect,
-			]),
-			captureNote,
-			toolRow,
-			fileInput,
-		]);
+		const composer = el(
+			"form",
+			{ class: "tl-composer", onsubmit: onSubmit, onkeydown: guardEnter },
+			[
+				recordBar,
+				thumbs,
+				textarea,
+				details,
+				el("div", { class: "tl-meta-row" }, [
+					el("label", { class: "tl-inline-label", text: t("Type") }),
+					typeSelect,
+				]),
+				captureNote,
+				toolRow,
+				fileInput,
+			]
+		);
 
 		const newRunForm = buildNewRunForm();
 
 		const header = el("header", { class: "tl-head" }, [
-			el("div", { class: "tl-head-title" }, [icon("bug", 18), el("strong", { text: t("Test Log") })]),
+			el("div", { class: "tl-head-title" }, [
+				icon("bug", 18),
+				el("strong", { text: t("Test Log") }),
+			]),
 			el("div", { class: "tl-head-actions" }, [
 				runSelect,
 				iconButton("document", t("Word report for this run"), buildReport),
@@ -187,14 +227,11 @@
 
 		const grip = el("div", { class: "tl-grip", title: t("Drag to resize") }, icon("grip", 14));
 
-		const root = el("aside", { class: "tl-panel", hidden: true, "aria-label": t("Test Log capture") }, [
-			grip,
-			header,
-			netStrip,
-			newRunForm.wrapper,
-			feedList,
-			composer,
-		]);
+		const root = el(
+			"aside",
+			{ class: "tl-panel", hidden: true, "aria-label": t("Test Log capture") },
+			[grip, header, netStrip, newRunForm.wrapper, feedList, composer]
+		);
 
 		root.style.width = `${clampWidth(Number(localStorage.getItem(WIDTH_KEY)) || 400)}px`;
 		enableResize();
@@ -223,7 +260,13 @@
 		function iconButton(iconName, label, action) {
 			return el(
 				"button",
-				{ type: "button", class: "tl-btn tl-btn-ghost tl-btn-icon", title: label, "aria-label": label, onclick: action },
+				{
+					type: "button",
+					class: "tl-btn tl-btn-ghost tl-btn-icon",
+					title: label,
+					"aria-label": label,
+					onclick: action,
+				},
 				icon(iconName, 16)
 			);
 		}
@@ -235,7 +278,10 @@
 				placeholder: label,
 				oninput: () => saveDraft(),
 			});
-			return { field, wrapper: el("label", { class: "tl-field" }, [el("span", { text: label }), field]) };
+			return {
+				field,
+				wrapper: el("label", { class: "tl-field" }, [el("span", { text: label }), field]),
+			};
 		}
 
 		function buildNewRunForm() {
@@ -243,7 +289,9 @@
 			const product = el(
 				"select",
 				{ class: "tl-select" },
-				(config.products || []).map((row) => el("option", { value: row.name }, row.product_name || row.name))
+				(config.products || []).map((row) =>
+					el("option", { value: row.name }, row.product_name || row.name)
+				)
 			);
 
 			const wrapper = el("div", { class: "tl-newrun", hidden: true }, [
@@ -272,7 +320,11 @@
 					},
 					t("Create")
 				),
-				el("button", { type: "button", class: "tl-btn", onclick: () => (wrapper.hidden = true) }, t("Cancel")),
+				el(
+					"button",
+					{ type: "button", class: "tl-btn", onclick: () => (wrapper.hidden = true) },
+					t("Cancel")
+				),
 			]);
 
 			return { wrapper, title };
@@ -338,7 +390,10 @@
 					return;
 				}
 				if (limit && item.size > limit) {
-					notify(t("That file is larger than the allowed size.") + ` (${bytes(item.size)})`, "warn");
+					notify(
+						t("That file is larger than the allowed size.") + ` (${bytes(item.size)})`,
+						"warn"
+					);
 					return;
 				}
 				kept.push(item);
@@ -370,20 +425,32 @@
 						item.kind === "image"
 							? el("img", { src: previewUrl(item), alt: item.file_name })
 							: item.kind === "video"
-							? el("video", { src: previewUrl(item), muted: true, playsinline: true })
+							? el("video", {
+									src: previewUrl(item),
+									muted: true,
+									playsinline: true,
+							  })
 							: el("div", { class: "tl-thumb-file" }, icon("paperclip", 18));
 
 					const actions = el("div", { class: "tl-thumb-actions" }, [
 						item.kind === "image" && tools.snip !== false
 							? el(
 									"button",
-									{ type: "button", title: t("Snip & annotate"), onclick: () => editItem(item) },
+									{
+										type: "button",
+										title: t("Snip & annotate"),
+										onclick: () => editItem(item),
+									},
 									icon("scissors", 13)
 							  )
 							: null,
 						el(
 							"button",
-							{ type: "button", title: t("Remove"), onclick: () => removeItem(item.id) },
+							{
+								type: "button",
+								title: t("Remove"),
+								onclick: () => removeItem(item.id),
+							},
 							icon("close", 13)
 						),
 					]);
@@ -398,11 +465,11 @@
 						},
 					});
 
-					return el("div", { class: "tl-thumb", title: `${item.file_name} · ${bytes(item.size)}` }, [
-						media,
-						actions,
-						caption,
-					]);
+					return el(
+						"div",
+						{ class: "tl-thumb", title: `${item.file_name} · ${bytes(item.size)}` },
+						[media, actions, caption]
+					);
 				})
 			);
 
@@ -468,16 +535,24 @@
 					limitSeconds: tools.recording_limit_seconds || 0,
 					maxBytes: (tools.max_attachment_mb || 50) * 1024 * 1024,
 					onTick: (seconds) => {
-						timer.textContent = `${Math.floor(seconds / 60)}:${String(seconds % 60).padStart(2, "0")}`;
+						timer.textContent = `${Math.floor(seconds / 60)}:${String(
+							seconds % 60
+						).padStart(2, "0")}`;
 					},
 					onStop: (item, info) => {
 						recording = null;
 						recordBar.hidden = true;
 						recordBar.replaceChildren();
 
-						if (info?.overflowed) notify(t("Recording stopped — size limit reached."), "warn");
+						if (info?.overflowed)
+							notify(t("Recording stopped — size limit reached."), "warn");
 						if (info?.empty) {
-							notify(t("Nothing was recorded — the screen share ended before any video arrived."), "warn");
+							notify(
+								t(
+									"Nothing was recorded — the screen share ended before any video arrived."
+								),
+								"warn"
+							);
 							return;
 						}
 
@@ -492,10 +567,18 @@
 					el("span", { text: t("Recording") }),
 					timer,
 					el("span", { class: "tl-spacer" }),
-					el("button", { type: "button", class: "tl-btn", onclick: () => handle.cancel() }, t("Discard")),
 					el(
 						"button",
-						{ type: "button", class: "tl-btn tl-btn-primary", onclick: () => handle.stop() },
+						{ type: "button", class: "tl-btn", onclick: () => handle.cancel() },
+						t("Discard")
+					),
+					el(
+						"button",
+						{
+							type: "button",
+							class: "tl-btn tl-btn-primary",
+							onclick: () => handle.stop(),
+						},
 						t("Stop")
 					)
 				);
@@ -584,7 +667,9 @@
 			previews.clear();
 
 			textarea.value = "";
-			[subjectInput, moduleInput, stepsInput, expectedInput].forEach((f) => (f.field.value = ""));
+			[subjectInput, moduleInput, stepsInput, expectedInput].forEach(
+				(f) => (f.field.value = "")
+			);
 			details.hidden = true;
 			detailsToggle.classList.remove("is-active");
 
@@ -649,7 +734,9 @@
 							icon("bug", 22),
 							el("p", { text: t("Nothing logged here yet.") }),
 							el("small", {
-								text: t("Capture the screen, say what went wrong, and it lands in the sheet."),
+								text: t(
+									"Capture the screen, say what went wrong, and it lands in the sheet."
+								),
 							}),
 					  ])
 			);
@@ -681,13 +768,29 @@
 					el("div", { class: "tl-entry-body" }, [
 						el("div", { class: "tl-entry-subject", text: log.subject }),
 						el("div", { class: "tl-entry-meta" }, [
-							el("span", { class: `tl-pill tl-pill-${colour}`, text: t(log.status) }),
+							el("span", {
+								class: `tl-pill tl-pill-${colour}`,
+								text: t(log.status),
+							}),
 							el("span", { text: log.name }),
 							log.evidence_count
 								? el("span", { text: `${log.evidence_count} ${t("files")}` })
 								: null,
 							el("span", { class: "tl-muted", text: timeAgo(log.creation) }),
 						]),
+						// The server checks what else is already in this run that looks the
+						// same. Said after the fact on purpose — nothing interrupts a tester
+						// mid-test, but the same finding twice is worth knowing about.
+						log.similar?.length
+							? el("div", { class: "tl-entry-similar" }, [
+									el("span", {
+										text: `${t("Looks like")} ${log.similar
+											.slice(0, 2)
+											.map((other) => other.name)
+											.join(", ")}`,
+									}),
+							  ])
+							: null,
 					]),
 				]
 			);
@@ -697,40 +800,53 @@
 			const failed = entry.status === "failed";
 			const preview = entry.attachments?.find((item) => item.kind === "image");
 
-			return el("article", { class: `tl-entry tl-entry-queued${failed ? " is-failed" : ""}` }, [
-				preview ? el("img", { class: "tl-entry-thumb", src: previewUrl(preview), alt: "" }) : null,
-				el("div", { class: "tl-entry-body" }, [
-					el("div", {
-						class: "tl-entry-subject",
-						text: entry.payload.subject || entry.payload.description || t("Capture"),
-					}),
-					el("div", { class: "tl-entry-meta" }, [
-						el("span", { class: `tl-pill tl-pill-${failed ? "red" : "gray"}` }, [
-							icon("clock", 11),
-							failed ? t("Not sent") : t("Waiting"),
-						]),
-						entry.error ? el("span", { class: "tl-muted", text: entry.error }) : null,
-					]),
-					failed
-						? el("div", { class: "tl-entry-actions" }, [
-								el(
-									"button",
-									{ type: "button", class: "tl-btn tl-btn-mini", onclick: () => handlers.retry(entry) },
-									t("Try again")
-								),
-								el(
-									"button",
-									{
-										type: "button",
-										class: "tl-btn tl-btn-mini",
-										onclick: () => handlers.discard(entry),
-									},
-									t("Discard")
-								),
-						  ])
+			return el(
+				"article",
+				{ class: `tl-entry tl-entry-queued${failed ? " is-failed" : ""}` },
+				[
+					preview
+						? el("img", { class: "tl-entry-thumb", src: previewUrl(preview), alt: "" })
 						: null,
-				]),
-			]);
+					el("div", { class: "tl-entry-body" }, [
+						el("div", {
+							class: "tl-entry-subject",
+							text:
+								entry.payload.subject || entry.payload.description || t("Capture"),
+						}),
+						el("div", { class: "tl-entry-meta" }, [
+							el("span", { class: `tl-pill tl-pill-${failed ? "red" : "gray"}` }, [
+								icon("clock", 11),
+								failed ? t("Not sent") : t("Waiting"),
+							]),
+							entry.error
+								? el("span", { class: "tl-muted", text: entry.error })
+								: null,
+						]),
+						failed
+							? el("div", { class: "tl-entry-actions" }, [
+									el(
+										"button",
+										{
+											type: "button",
+											class: "tl-btn tl-btn-mini",
+											onclick: () => handlers.retry(entry),
+										},
+										t("Try again")
+									),
+									el(
+										"button",
+										{
+											type: "button",
+											class: "tl-btn tl-btn-mini",
+											onclick: () => handlers.discard(entry),
+										},
+										t("Discard")
+									),
+							  ])
+							: null,
+					]),
+				]
+			);
 		}
 
 		/** Build the run's Word document — every log in it, with its evidence embedded. */
@@ -758,15 +874,23 @@
 
 			if (!online) {
 				parts.push(
-					el("span", { class: "tl-net-tag tl-net-offline" }, [icon("cloud", 13), t("Offline")]),
+					el("span", { class: "tl-net-tag tl-net-offline" }, [
+						icon("cloud", 13),
+						t("Offline"),
+					]),
 					el("span", {
 						class: "tl-muted",
-						text: t("Entries are saved on this device and sent when the site is back."),
+						text: t(
+							"Entries are saved on this device and sent when the site is back."
+						),
 					})
 				);
 			} else if (pending) {
 				parts.push(
-					el("span", { class: "tl-net-tag" }, [icon("refresh", 13), syncing ? t("Sending…") : t("Waiting to send")])
+					el("span", { class: "tl-net-tag" }, [
+						icon("refresh", 13),
+						syncing ? t("Sending…") : t("Waiting to send"),
+					])
 				);
 			}
 
@@ -776,7 +900,11 @@
 					parts.push(
 						el(
 							"button",
-							{ type: "button", class: "tl-btn tl-btn-mini", onclick: () => handlers.syncNow?.() },
+							{
+								type: "button",
+								class: "tl-btn tl-btn-mini",
+								onclick: () => handlers.syncNow?.(),
+							},
 							t("Send now")
 						)
 					);
@@ -787,7 +915,9 @@
 				parts.push(
 					el("span", {
 						class: "tl-muted",
-						text: t("This browser blocks local storage — do not close the tab with entries waiting."),
+						text: t(
+							"This browser blocks local storage — do not close the tab with entries waiting."
+						),
 					})
 				);
 			}

@@ -26,9 +26,7 @@ def build_run_report(test_run: str, attach: int = 1):
 	run = frappe.get_doc("Test Run", test_run)
 	run.check_permission("read")
 
-	logs = frappe.get_all(
-		"Test Log", filters={"test_run": run.name}, pluck="name", order_by="creation asc"
-	)
+	logs = frappe.get_all("Test Log", filters={"test_run": run.name}, pluck="name", order_by="creation asc")
 
 	document = Document()
 	_run_cover(document, run, len(logs))
@@ -140,9 +138,7 @@ def _selection_cover(document: Document, names: list[str]):
 
 def _run_cover(document: Document, run, log_count: int):
 	document.heading(run.title, level=0)
-	document.paragraph(
-		_("Test run {0}").format(run.name), size=20, color="616E7C", space_after=200
-	)
+	document.paragraph(_("Test run {0}").format(run.name), size=20, color="616E7C", space_after=200)
 
 	document.label_value(_("Product"), run.product)
 	document.label_value(_("Build / Version"), run.build_version)
@@ -177,7 +173,9 @@ def _log_section(document: Document, log, with_heading: bool = True):
 		_("Assigned Developer"),
 		frappe.utils.get_fullname(log.assigned_developer) if log.assigned_developer else None,
 	)
-	document.label_value(_("Target Fix Date"), frappe.utils.formatdate(log.target_date) if log.target_date else None)
+	document.label_value(
+		_("Target Fix Date"), frappe.utils.formatdate(log.target_date) if log.target_date else None
+	)
 	document.label_value(_("Environment"), log.environment)
 	document.label_value(_("Build Tested"), log.build_version)
 	document.label_value(_("Page"), log.page_route)

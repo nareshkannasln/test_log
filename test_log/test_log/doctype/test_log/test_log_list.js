@@ -1,28 +1,61 @@
 // Copyright (c) 2026, Aerele and contributors
 // For license information, please see license.txt
 
+const STATUS_COLORS = {
+	Open: "red",
+	Reopened: "orange",
+	Ongoing: "blue",
+	"Needs Info": "yellow",
+	Fixed: "purple",
+	Completed: "green",
+	"Won't Fix": "gray",
+};
+
+// Set on many logs at once. Status is not here — it moves through set_status so the
+// flow rules still apply.
+const BULK_FIELDS = [
+	{
+		fieldname: "assigned_developer",
+		label: __("Assign Developer"),
+		fieldtype: "Link",
+		options: "User",
+	},
+	{ fieldname: "test_run", label: __("Move to Run"), fieldtype: "Link", options: "Test Run" },
+	{
+		fieldname: "severity",
+		label: __("Set Severity"),
+		fieldtype: "Select",
+		options: "Low\nMedium\nHigh\nCritical",
+	},
+	{ fieldname: "target_date", label: __("Set Target Date"), fieldtype: "Date" },
+];
+
 frappe.listview_settings["Test Log"] = {
-	add_fields: ["status", "severity", "assigned_developer", "product"],
+	add_fields: ["status", "severity", "assigned_developer", "product", "duplicate_of"],
 
 	filters: [["status", "not in", ["Completed", "Won't Fix"]]],
 
 	get_indicator(doc) {
-		const colors = {
-			Open: "red",
-			Reopened: "orange",
-			Ongoing: "blue",
-			Fixed: "purple",
-			Completed: "green",
-			"Won't Fix": "gray",
-		};
-		return [__(doc.status), colors[doc.status] || "gray", `status,=,${doc.status}`];
+		return [__(doc.status), STATUS_COLORS[doc.status] || "gray", `status,=,${doc.status}`];
 	},
 
 	onload(listview) {
-		["Ongoing", "Fixed", "Completed", "Won't Fix"].forEach((status) => {
+		const statuses = frappe.boot.test_log_vocabulary?.statuses || Object.keys(STATUS_COLORS);
+
+		statuses
+			.filter((status) => status !== "Open")
+			.forEach((status) => {
+				listview.page.add_actions_menu_item(
+					__("Mark {0}", [__(status)]),
+					() => bulk_update(listview, status),
+					true
+				);
+			});
+
+		BULK_FIELDS.forEach((field) => {
 			listview.page.add_actions_menu_item(
-				__("Mark {0}", [__(status)]),
-				() => bulk_update(listview, status),
+				field.label,
+				() => bulk_field(listview, field),
 				true
 			);
 		});
@@ -60,7 +93,10 @@ function selection_sheet(listview) {
 			const skipped = r.message.skipped;
 			frappe.show_alert({
 				message: skipped
-					? __("{0} logs in the sheet, {1} skipped — no access", [r.message.logs, skipped])
+					? __("{0} logs in the sheet, {1} skipped — no access", [
+							r.message.logs,
+							skipped,
+					  ])
 					: __("{0} logs in the sheet", [r.message.logs]),
 				indicator: skipped ? "orange" : "green",
 			});
@@ -89,7 +125,10 @@ function selection_report(listview) {
 			const skipped = r.message.skipped;
 			frappe.show_alert({
 				message: skipped
-					? __("{0} logs in the report, {1} skipped — no access", [r.message.logs, skipped])
+					? __("{0} logs in the report, {1} skipped — no access", [
+							r.message.logs,
+							skipped,
+					  ])
 					: __("{0} logs in the report", [r.message.logs]),
 				indicator: skipped ? "orange" : "green",
 			});
@@ -107,17 +146,70 @@ function bulk_update(listview, status) {
 	}
 
 	frappe.call({
-		method: "test_log.test_log.doctype.test_log.test_log.bulk_set_status",
+		method: "test_log.api.bulk_set_status",
 		args: { names, status },
 		freeze: true,
 		freeze_message: __("Updating {0} logs...", [names.length]),
 		callback(r) {
-			const updated = (r.message || []).length;
-			frappe.show_alert({
-				message: __("{0} of {1} updated", [updated, names.length]),
-				indicator: updated === names.length ? "green" : "orange",
-			});
-			listview.refresh();
+			report_result(listview, r.message, names.length);
 		},
 	});
+}
+
+/** Assign a developer, move to another run, change severity — on everything ticked. */
+function bulk_field(listview, field) {
+	const names = listview.get_checked_items(true);
+	if (!names.length) {
+		frappe.msgprint(__("Select at least one test log."));
+		return;
+	}
+
+	frappe.prompt(
+		[{ ...field, label: field.label, reqd: field.fieldtype !== "Date" }],
+		(values) =>
+			frappe.call({
+				method: "test_log.api.bulk_update_field",
+				args: { names, fieldname: field.fieldname, value: values[field.fieldname] },
+				freeze: true,
+				freeze_message: __("Updating {0} logs...", [names.length]),
+				callback(r) {
+					report_result(listview, r.message, names.length);
+				},
+			}),
+		field.label,
+		__("Apply")
+	);
+}
+
+/**
+ * Say what actually happened. A log the user cannot write, or one the status flow
+ * refuses to move, used to disappear from the count with no explanation.
+ */
+function report_result(listview, result, requested) {
+	const updated = result?.updated?.length || 0;
+	const skipped = result?.skipped || [];
+
+	frappe.show_alert({
+		message: __("{0} of {1} updated", [updated, requested]),
+		indicator: skipped.length ? "orange" : "green",
+	});
+
+	if (skipped.length) {
+		const rows = skipped
+			.map(
+				(row) =>
+					`<li><b>${frappe.utils.escape_html(row.name)}</b> — ${frappe.utils.escape_html(
+						row.reason
+					)}</li>`
+			)
+			.join("");
+
+		frappe.msgprint({
+			title: __("{0} were left alone", [skipped.length]),
+			indicator: "orange",
+			message: `<ul>${rows}</ul>`,
+		});
+	}
+
+	listview.refresh();
 }

@@ -64,11 +64,7 @@ def developer_choices() -> list[dict]:
 		.on(has_role.parent == user.name)
 		.select(user.name, user.full_name)
 		.distinct()
-		.where(
-			(has_role.role == "Developer")
-			& (has_role.parenttype == "User")
-			& (user.enabled == 1)
-		)
+		.where((has_role.role == "Developer") & (has_role.parenttype == "User") & (user.enabled == 1))
 		.orderby(user.full_name)
 		.limit(100)
 		.run(as_dict=True)

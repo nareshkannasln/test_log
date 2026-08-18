@@ -159,36 +159,25 @@ extend_bootinfo = "test_log.boot.boot_session"
 
 # Document Events
 # ---------------
-# Hook on document methods and events
 
-# doc_events = {
-# 	"*": {
-# 		"on_update": "method",
-# 		"on_cancel": "method",
-# 		"on_trash": "method"
-# 	}
-# }
+# A comment on a test log is half of a conversation — Frappe stores it, but only this
+# tells the person on the other side of the log that it is there.
+doc_events = {
+	"Comment": {
+		"after_insert": "test_log.comments.on_comment",
+	},
+}
 
 # Scheduled Tasks
 # ---------------
 
-# scheduler_events = {
-# 	"all": [
-# 		"test_log.tasks.all"
-# 	],
-# 	"daily": [
-# 		"test_log.tasks.daily"
-# 	],
-# 	"hourly": [
-# 		"test_log.tasks.hourly"
-# 	],
-# 	"weekly": [
-# 		"test_log.tasks.weekly"
-# 	],
-# 	"monthly": [
-# 		"test_log.tasks.monthly"
-# 	],
-# }
+# Chasing overdue logs and the developer digest. Both jobs check their own switch in
+# Test Log Settings first and are off until a site asks for them.
+scheduler_events = {
+	"daily": [
+		"test_log.tasks.daily",
+	],
+}
 
 # Testing
 # -------
@@ -278,4 +267,3 @@ extend_bootinfo = "test_log.boot.boot_session"
 # ------------
 # List of apps whose translatable strings should be excluded from this app's translations.
 # ignore_translatable_strings_from = []
-

@@ -19,6 +19,7 @@
 	--tl-primary: var(--primary, #2490ef);
 	--tl-primary-text: var(--neutral-white, #ffffff);
 	--tl-radius: var(--border-radius-md, 8px);
+	--tl-warning: var(--yellow-600, #b45309);
 	--tl-shadow: 0 8px 30px rgba(15, 23, 42, 0.18);
 
 	box-sizing: border-box;
@@ -329,6 +330,12 @@ body.tl-resizing {
 	color: var(--tl-muted);
 }
 
+.tl-entry-similar {
+	margin-top: 4px;
+	font-size: 11px;
+	color: var(--tl-warning);
+}
+
 .tl-entry-actions {
 	display: flex;
 	gap: 6px;
@@ -362,6 +369,10 @@ body.tl-resizing {
 .tl-pill-blue {
 	background: var(--blue-100, #dbeafe);
 	color: var(--blue-700, #1d4ed8);
+}
+.tl-pill-yellow {
+	background: var(--yellow-100, #fef9c3);
+	color: var(--yellow-700, #a16207);
 }
 .tl-pill-purple {
 	background: var(--purple-100, #ede9fe);

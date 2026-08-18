@@ -46,7 +46,8 @@
 		stop: '<rect x="6" y="6" width="12" height="12" rx="2" fill="currentColor"/>',
 		scissors:
 			'<circle cx="6" cy="6" r="3"/><circle cx="6" cy="18" r="3"/><path d="M20 4 8.1 16M8.1 8 20 20"/>',
-		paperclip: '<path d="M21 11.5 12 20.5a5 5 0 0 1-7-7l9-9a3.5 3.5 0 0 1 5 5l-9 9a2 2 0 0 1-3-3l8-8"/>',
+		paperclip:
+			'<path d="M21 11.5 12 20.5a5 5 0 0 1-7-7l9-9a3.5 3.5 0 0 1 5 5l-9 9a2 2 0 0 1-3-3l8-8"/>',
 		close: '<path d="M6 6l12 12M18 6 6 18"/>',
 		send: '<path d="M4 12 20 4l-4 16-4-7z"/>',
 		bug: '<path d="M9 6a3 3 0 0 1 6 0M8 9h8v6a4 4 0 0 1-8 0zM4 12h4M16 12h4M5 7l3 2M19 7l-3 2M5 18l3-2M19 18l-3-2"/>',
@@ -57,7 +58,8 @@
 		refresh: '<path d="M20 12a8 8 0 1 1-2.3-5.6M20 4v5h-5"/>',
 		trash: '<path d="M4 7h16M9 7V5h6v2M6 7l1 13h10l1-13"/>',
 		grip: '<path d="M9 5v14M15 5v14"/>',
-		document: '<path d="M14 3H7a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2V8zM14 3v5h5M9 13h6M9 17h6"/>',
+		document:
+			'<path d="M14 3H7a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2V8zM14 3v5h5M9 13h6M9 17h6"/>',
 	};
 
 	function icon(name, size = 16) {
@@ -278,7 +280,12 @@
 		clear: () => errors.splice(0, errors.length),
 		asText() {
 			return errors
-				.map((row) => `[${row.at}] ${row.kind}: ${row.text}${row.detail ? `\n    ${row.detail}` : ""}`)
+				.map(
+					(row) =>
+						`[${row.at}] ${row.kind}: ${row.text}${
+							row.detail ? `\n    ${row.detail}` : ""
+						}`
+				)
 				.join("\n");
 		},
 	};
@@ -303,8 +310,7 @@
 		if (branded) return `${branded.brand} ${branded.version}`;
 
 		const ua = navigator.userAgent;
-		const match =
-			ua.match(/(Edg|OPR|Chrome|Firefox|Safari)\/([\d.]+)/) || [];
+		const match = ua.match(/(Edg|OPR|Chrome|Firefox|Safari)\/([\d.]+)/) || [];
 		const names = { Edg: "Edge", OPR: "Opera" };
 		return match[1] ? `${names[match[1]] || match[1]} ${match[2].split(".")[0]}` : "Browser";
 	}
@@ -341,7 +347,9 @@
 			return {
 				page_route: currentRoute(),
 				page_url: location.href,
-				viewport: `${window.innerWidth}x${window.innerHeight} @${window.devicePixelRatio || 1}x`,
+				viewport: `${window.innerWidth}x${window.innerHeight} @${
+					window.devicePixelRatio || 1
+				}x`,
 				environment: [browserName(), platformName()].filter(Boolean).join(" on "),
 			};
 		},

@@ -244,7 +244,9 @@
 
 				async buildReport(testRun) {
 					try {
-						return await NS.api.call("test_log.api.build_run_report", { test_run: testRun });
+						return await NS.api.call("test_log.api.build_run_report", {
+							test_run: testRun,
+						});
 					} catch (error) {
 						panel.notify(error.message, "warn");
 						return null;
@@ -324,7 +326,10 @@
 		]);
 
 		document.body.append(menu);
-		setTimeout(() => document.addEventListener("click", () => menu.remove(), { once: true }), 0);
+		setTimeout(
+			() => document.addEventListener("click", () => menu.remove(), { once: true }),
+			0
+		);
 	}
 
 	// ------------------------------------------------------------------ wiring

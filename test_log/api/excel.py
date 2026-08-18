@@ -39,9 +39,7 @@ def build_run_sheet(test_run: str, attach: int = 0):
 	run = frappe.get_doc("Test Run", test_run)
 	run.check_permission("read")
 
-	names = frappe.get_all(
-		"Test Log", filters={"test_run": run.name}, pluck="name", order_by="creation asc"
-	)
+	names = frappe.get_all("Test Log", filters={"test_run": run.name}, pluck="name", order_by="creation asc")
 
 	if not names:
 		frappe.throw(_("No test logs in this run yet."))

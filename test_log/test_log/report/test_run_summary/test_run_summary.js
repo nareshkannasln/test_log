@@ -9,7 +9,7 @@ frappe.query_reports["Test Run Summary"] = {
 			fieldname: "status",
 			label: __("Status"),
 			fieldtype: "Select",
-			options: ["", "Open", "Ongoing", "Fixed", "Completed", "Won't Fix", "Reopened"],
+			options: ["", ...(frappe.boot.test_log_vocabulary?.statuses || [])],
 		},
 		{
 			fieldname: "severity",
@@ -18,7 +18,12 @@ frappe.query_reports["Test Run Summary"] = {
 			options: ["", "Low", "Medium", "High", "Critical"],
 		},
 		{ fieldname: "tester", label: __("Tester"), fieldtype: "Link", options: "User" },
-		{ fieldname: "assigned_developer", label: __("Developer"), fieldtype: "Link", options: "User" },
+		{
+			fieldname: "assigned_developer",
+			label: __("Developer"),
+			fieldtype: "Link",
+			options: "User",
+		},
 		{ fieldname: "from_date", label: __("From Date"), fieldtype: "Datetime" },
 		{ fieldname: "to_date", label: __("To Date"), fieldtype: "Datetime" },
 	],
@@ -27,20 +32,17 @@ frappe.query_reports["Test Run Summary"] = {
 		value = default_formatter(value, row, column, data);
 
 		if (column.fieldname === "status" && data) {
-			const colors = {
-				Open: "red",
-				Reopened: "orange",
-				Ongoing: "blue",
-				Fixed: "purple",
-				Completed: "green",
-				"Won't Fix": "gray",
-			};
+			const colors = frappe.boot.test_log_vocabulary?.status_colors || {};
 			return `<span class="indicator-pill ${colors[data.status] || "gray"}">${__(
 				data.status
 			)}</span>`;
 		}
 
-		if (column.fieldname === "severity" && data && ["High", "Critical"].includes(data.severity)) {
+		if (
+			column.fieldname === "severity" &&
+			data &&
+			["High", "Critical"].includes(data.severity)
+		) {
 			return `<span style="color: var(--red-500); font-weight: 600">${value}</span>`;
 		}
 

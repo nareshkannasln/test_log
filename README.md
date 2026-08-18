@@ -4,16 +4,17 @@ A Frappe app for keeping testing logs in one place — testers record what they 
 screenshots and screen recordings, hand the whole run to a developer, and the developer updates
 the status right on the same record.
 
-Built for Frappe v15/v16.
+Built for Frappe v16.
 
 ## What it gives you
 
 **Test Product** — the applications you test. Each one can carry a default developer, so logs
-raised against it get routed automatically.
+raised against it get routed automatically, and a repository URL, offered as *Open Repository* on
+any log filed against it.
 
 **Test Run** — the "sheet". A named batch of testing (`Sprint 42 regression sweep`) tied to a
-product and build. It keeps a live count of its logs by status, and can be shared wholesale with
-a developer in one action.
+product and build. It keeps a live count of its logs by status, can be shared wholesale with
+a developer in one action, and is **signed off** when the testing is finished.
 
 **Test Log Settings** — one switch turns on *tester mode*: a capture button on every screen with
 screenshot, screen recording, snipping and offline logging behind it. See below.
@@ -26,9 +27,12 @@ screenshot, screen recording, snipping and offline logging behind it. See below.
   on the form, and external Loom/Drive links are supported for anything too big to upload
 - **Capture context** — for anything logged from the capture panel: the route and URL the tester
   was on, viewport, browser/OS, and the console errors the page threw
-- **Status**: `Open → Ongoing → Fixed → Completed`, plus `Won't Fix` and `Reopened`
+- **Status**: `Open → Ongoing → Fixed → Completed`, plus `Needs Info`, `Won't Fix` and `Reopened`
 - Tester, assigned developer, target fix date
 - Developer section: resolution notes, fixed-in-build, and auto-stamped resolved by/on
+- **Verified by / on** — stamped when the *tester* accepts the fix, kept apart from the
+  developer's resolved by/on, so a handover shows who closed it and who checked it
+- **Duplicate of** — the log this one repeats, when the same finding gets filed twice
 
 ## How the handoff works
 
@@ -45,14 +49,84 @@ with an optional note. That's the "share the sheet with the developer" flow.
 Any status change notifies the other party — if a developer marks something Fixed, the tester
 hears about it, and vice versa.
 
-## Updating status
+## The status flow
 
-Three ways, so the developer always has the fastest one to hand:
+| From | Can go to |
+| --- | --- |
+| `Open` / `Reopened` | `Ongoing`, `Needs Info`, `Won't Fix` |
+| `Ongoing` | `Fixed`, `Needs Info`, `Won't Fix` |
+| `Needs Info` | `Open`, `Ongoing`, `Won't Fix` |
+| `Fixed` | `Completed`, `Reopened` |
+| `Completed` / `Won't Fix` | `Reopened` |
 
-- **On the form** — a Status button group offers only the valid next steps for the current status.
-  Marking `Fixed` or `Won't Fix` prompts for a note, which lands in the Resolution field.
-- **From the list** — tick several logs and use *Actions → Mark Ongoing / Fixed / Completed*.
+A log is filed as `Open` (or `Reopened`) and reaches everything else by moving through that table.
+`Needs Info` is where a developer parks anything they cannot reproduce — it asks the tester a
+question rather than sitting silently as Ongoing.
+
+**The flow is enforced on the server**, not only drawn in the buttons: a log cannot jump from
+`Open` to `Completed` through the list view, the REST API or a stale browser tab, and it cannot
+be *filed* as already resolved. Turn **Enforce Status Flow** off in the settings if a site wants
+statuses to move freely.
+
+Three ways to move one, so the developer always has the fastest to hand:
+
+- **On the form** — a Status button group offers only the valid next steps for the current status,
+  read from the same table the server validates against. `Fixed` and `Won't Fix` prompt for a
+  resolution; `Needs Info` and `Reopened` prompt for the question or the reason, which is posted
+  as a note.
+- **From the list** — tick several logs and use *Actions → Mark …*. Anything the flow will not
+  move, or that you cannot edit, is **listed back to you with the reason** rather than quietly
+  dropped from the count.
 - **Directly** — edit the Status field and save.
+
+## Notes, and the conversation on a log
+
+Every comment on a Test Log — typed into the timeline, or added with *Actions → Add Note*, or
+attached to a status change — **notifies the other party**. A developer's question under
+`Needs Info` reaches the tester, and the answer reaches the developer, all of it interleaved with
+the status changes in the document's own timeline.
+
+## Duplicates
+
+The same finding gets filed twice more often than anything else goes wrong on a testing sheet.
+The app looks for logs already in the run whose subject shares distinctive words, or that were
+raised against the same route or feature:
+
+- **On the form** — a *Possible duplicates* banner listing them, and *Actions → Mark as Duplicate*
+  to point this log at the original. Chains collapse: a duplicate of a duplicate points at the one
+  they both repeat.
+- **In the capture panel** — the entry the tester just sent carries a quiet "Looks like TL-…" line.
+  Deliberately after the fact: nothing interrupts someone mid-test.
+
+Switch it off with **Warn About Possible Duplicates**.
+
+## Signing off a run
+
+*Sign Off* on a Test Run closes the sheet and records **who signed it off, when, and with what
+notes**. A run with logs still `Open`, `Ongoing` or `Needs Info` will not sign off — unless you
+tick *Sign off anyway* and say why, which is written onto the record.
+
+After sign-off the run takes no new logs (the ones already in it stay editable, so a late
+regression can still be updated). Turn that off with **Freeze Signed-off Runs**.
+
+## Working on many logs at once
+
+From the Test Log list, tick what you want and use *Actions*:
+
+- **Mark …** — any status the flow allows
+- **Assign Developer**, **Move to Run**, **Set Severity**, **Set Target Date**
+- **Word Report** / **Excel Sheet**
+
+Every one of them reports what it skipped and why.
+
+## Reminders
+
+Off by default — a testing app that starts emailing people the day it is installed makes itself
+unwelcome. In *Test Log Settings*:
+
+- **Chase Overdue Logs** — a daily nudge to the developer and tester once a log is past its
+  target date and still unresolved
+- **Send a Daily Digest** — one daily summary per developer of everything waiting on them
 
 ## Tester mode — logging without leaving the page
 
@@ -136,6 +210,13 @@ which capture tools are offered, recording and attachment limits, whether upload
 whether page context and console errors are recorded, how often a waiting queue retries, and
 whether a Word report is kept attached to every run.
 
+Under **Workflow** and **Reminders** it also holds the guards described above: *Enforce Status
+Flow*, *Freeze Signed-off Runs*, *Warn About Possible Duplicates*, *Chase Overdue Logs* and
+*Send a Daily Digest*.
+
+The attachment size limit and the `http(s)` rule for external links are **checked on the server as
+well as in the panel**, so they hold for anything posted straight to the API.
+
 Installing the app switches tester mode on for Tester and System Manager. Turning it off hides the
 button for everyone, and it stays off across upgrades.
 
@@ -152,9 +233,9 @@ URLs. Use the report view's built-in **Export** for Excel or CSV.
 
 The app creates two roles on install:
 
-- **Tester** — full create/read/write/delete on runs, logs and products
-- **Developer** — read/write on test logs (so they can update status and add resolution notes),
-  read-only on runs and products
+- **Tester** — full create/read/write/delete on runs, logs and products; signs runs off
+- **Developer** — read/write on test logs (so they can update status, ask for more information and
+  add resolution notes), read-only on runs and products
 
 ## Installation
 
@@ -170,6 +251,20 @@ bench --site <your-site> install-app test_log
 cd apps/test_log
 pre-commit install
 ```
+
+### Tests
+
+```bash
+bench --site <your-site> set-config allow_tests true
+bench --site <your-site> run-tests --app test_log
+```
+
+They cover the status flow and its enforcement, the resolved/verified stamps, evidence
+validation, duplicate detection and collapsing, the bulk actions and what they report back, run
+counters and sign-off, and the capture endpoint's `client_id` de-duplication.
+
+GitHub Actions runs the same suite plus `pre-commit` on every push to `main`/`develop` and on
+every pull request — see `.github/workflows/ci.yml`.
 
 ## License
 

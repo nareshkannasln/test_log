@@ -126,7 +126,7 @@
    "doc_view": "List",
    "label": "Test Log",
    "link_to": "Test Log",
-   "stats_filter": "{\"status\":[\"in\",[\"Open\",\"Reopened\",\"Ongoing\"]]}",
+   "stats_filter": "{\"status\": [\"in\", [\"Open\", \"Reopened\", \"Ongoing\", \"Needs Info\"]]}",
    "type": "DocType"
   },
   {

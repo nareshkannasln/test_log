@@ -7,14 +7,7 @@ import frappe
 from frappe import _
 from frappe.utils import get_url
 
-STATUS_COLOURS = {
-	"Open": "red",
-	"Reopened": "orange",
-	"Ongoing": "blue",
-	"Fixed": "purple",
-	"Completed": "green",
-	"Won't Fix": "gray",
-}
+from test_log.constants import STATUS_COLORS as STATUS_COLOURS
 
 
 def execute(filters=None):
@@ -103,9 +96,7 @@ def attach_evidence(logs):
 		url = row.file_url or row.external_link
 		if not url:
 			continue
-		by_log.setdefault(row.parent, []).append(
-			get_url(url) if url.startswith("/") else url
-		)
+		by_log.setdefault(row.parent, []).append(get_url(url) if url.startswith("/") else url)
 
 	for log in logs:
 		links = by_log.get(log.name, [])

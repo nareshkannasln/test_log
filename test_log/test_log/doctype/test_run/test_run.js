@@ -34,11 +34,91 @@ frappe.ui.form.on("Test Run", {
 		frm.add_custom_button(__("Excel Sheet"), () => build_sheet(frm), __("View"));
 
 		frm.add_custom_button(__("Share with Developer"), () => share_dialog(frm), __("Actions"));
+
+		if (frm.doc.status !== "Signed Off") {
+			frm.add_custom_button(__("Sign Off"), () => sign_off_dialog(frm), __("Actions"));
+		}
+
 		frm.page.set_inner_btn_group_as_primary(__("Actions"));
+
+		if (frm.doc.signed_off_by) {
+			frm.dashboard.add_comment(
+				__("Signed off by {0} on {1}.", [
+					frappe.utils.escape_html(frm.doc.signed_off_by),
+					frappe.datetime.str_to_user(frm.doc.signed_off_on),
+				]),
+				"green",
+				true
+			);
+		}
 
 		render_status_bar(frm);
 	},
 });
+
+/**
+ * Closing the sheet off. The run has to actually be finished — anything still Open,
+ * Ongoing or Needs Info blocks it, unless the tester says in writing why it is being
+ * signed off regardless.
+ */
+function sign_off_dialog(frm) {
+	const unsettled =
+		(frm.doc.open_count || 0) + (frm.doc.ongoing_count || 0) + (frm.doc.needs_info_count || 0);
+
+	const dialog = new frappe.ui.Dialog({
+		title: __("Sign off this run"),
+		fields: [
+			{
+				fieldtype: "HTML",
+				options: unsettled
+					? `<div class="text-danger">${__("{0} logs are still open in this run.", [
+							unsettled,
+					  ])}</div>`
+					: `<div class="text-muted">${__(
+							"Every log in this run has been settled."
+					  )}</div>`,
+			},
+			{
+				fieldname: "notes",
+				fieldtype: "Small Text",
+				label: __("Sign-off notes"),
+				reqd: unsettled ? 1 : 0,
+				description: unsettled
+					? __("Say why the run is being signed off with logs still open.")
+					: "",
+			},
+			{
+				fieldname: "force",
+				fieldtype: "Check",
+				label: __("Sign off anyway"),
+				depends_on: unsettled ? "eval:1" : "eval:0",
+				default: 0,
+			},
+		],
+		primary_action_label: __("Sign Off"),
+		primary_action(values) {
+			if (unsettled && !values.force) {
+				frappe.msgprint(
+					__("Close the open logs first, or tick “Sign off anyway” and say why.")
+				);
+				return;
+			}
+
+			dialog.hide();
+			frappe.call({
+				method: "test_log.api.sign_off",
+				args: { test_run: frm.doc.name, notes: values.notes, force: values.force ? 1 : 0 },
+				freeze: true,
+				freeze_message: __("Signing off..."),
+				callback() {
+					frappe.show_alert({ message: __("Run signed off"), indicator: "green" });
+					frm.reload_doc();
+				},
+			});
+		},
+	});
+	dialog.show();
+}
 
 /** Builds the run's Word document — every log with its description and screenshots. */
 function build_report(frm) {
@@ -122,10 +202,11 @@ function share_dialog(frm) {
 }
 
 function render_status_bar(frm) {
-	const colors = {
+	const colors = frappe.boot.test_log_vocabulary?.status_colors || {
 		Open: "red",
 		Reopened: "orange",
 		Ongoing: "blue",
+		"Needs Info": "yellow",
 		Fixed: "purple",
 		Completed: "green",
 		"Won't Fix": "gray",
@@ -144,7 +225,10 @@ function render_status_bar(frm) {
 			}
 
 			Object.keys(stats).forEach((status) => {
-				frm.dashboard.add_indicator(`${__(status)}: ${stats[status]}`, colors[status] || "gray");
+				frm.dashboard.add_indicator(
+					`${__(status)}: ${stats[status]}`,
+					colors[status] || "gray"
+				);
 			});
 		},
 	});

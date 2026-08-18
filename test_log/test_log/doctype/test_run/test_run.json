@@ -19,12 +19,18 @@
   "total_logs",
   "open_count",
   "ongoing_count",
+  "needs_info_count",
   "column_break_summary",
   "fixed_count",
   "completed_count",
   "wont_fix_count",
   "section_break_scope",
-  "description"
+  "description",
+  "section_break_signoff",
+  "signed_off_by",
+  "signed_off_on",
+  "column_break_signoff",
+  "sign_off_notes"
  ],
  "fields": [
   {
@@ -141,6 +147,41 @@
    "fieldname": "description",
    "fieldtype": "Text Editor",
    "label": "What is being tested"
+  },
+  {
+   "fieldname": "needs_info_count",
+   "fieldtype": "Int",
+   "label": "Needs Info",
+   "read_only": 1
+  },
+  {
+   "depends_on": "eval:doc.signed_off_by",
+   "fieldname": "section_break_signoff",
+   "fieldtype": "Section Break",
+   "label": "Sign-off"
+  },
+  {
+   "fieldname": "signed_off_by",
+   "fieldtype": "Link",
+   "label": "Signed Off By",
+   "options": "User",
+   "read_only": 1
+  },
+  {
+   "fieldname": "signed_off_on",
+   "fieldtype": "Datetime",
+   "label": "Signed Off On",
+   "read_only": 1
+  },
+  {
+   "fieldname": "column_break_signoff",
+   "fieldtype": "Column Break"
+  },
+  {
+   "fieldname": "sign_off_notes",
+   "fieldtype": "Small Text",
+   "label": "Sign-off Notes",
+   "read_only": 1
   }
  ],
  "index_web_pages_for_search": 1,
@@ -150,7 +191,7 @@
    "link_fieldname": "test_run"
   }
  ],
- "modified": "2026-08-07 10:00:00.000000",
+ "modified": "2026-08-18 10:00:00.000000",
  "modified_by": "Administrator",
  "module": "Test Log",
  "name": "Test Run",

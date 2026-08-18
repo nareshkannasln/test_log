@@ -41,12 +41,16 @@
   "client_id",
   "section_break_console",
   "console_errors",
+  "section_break_duplicate",
+  "duplicate_of",
   "section_break_dev",
   "resolution",
   "column_break_dev",
   "fixed_in_build",
   "resolved_by",
-  "resolved_on"
+  "resolved_on",
+  "verified_by",
+  "verified_on"
  ],
  "fields": [
   {
@@ -102,7 +106,7 @@
    "in_list_view": 1,
    "in_standard_filter": 1,
    "label": "Status",
-   "options": "Open\nOngoing\nFixed\nCompleted\nWon't Fix\nReopened",
+   "options": "Open\nOngoing\nNeeds Info\nFixed\nCompleted\nWon't Fix\nReopened",
    "reqd": 1,
    "search_index": 1
   },
@@ -309,11 +313,38 @@
    "fieldtype": "Datetime",
    "label": "Resolved On",
    "read_only": 1
+  },
+  {
+   "description": "Stamped when the tester marks the log Completed.",
+   "fieldname": "verified_by",
+   "fieldtype": "Link",
+   "label": "Verified By",
+   "options": "User",
+   "read_only": 1
+  },
+  {
+   "fieldname": "verified_on",
+   "fieldtype": "Datetime",
+   "label": "Verified On",
+   "read_only": 1
+  },
+  {
+   "fieldname": "section_break_duplicate",
+   "fieldtype": "Section Break",
+   "label": "Duplicate"
+  },
+  {
+   "description": "The log this one repeats. Set it from “Possible duplicates” on the form.",
+   "fieldname": "duplicate_of",
+   "fieldtype": "Link",
+   "label": "Duplicate Of",
+   "options": "Test Log",
+   "search_index": 1
   }
  ],
  "index_web_pages_for_search": 1,
  "links": [],
- "modified": "2026-08-07 10:00:00.000000",
+ "modified": "2026-08-18 10:00:00.000000",
  "modified_by": "Administrator",
  "module": "Test Log",
  "name": "Test Log",

@@ -102,9 +102,7 @@ def _digest_body(rows: list) -> str:
 	if len(rows) > DIGEST_LIMIT:
 		body.append(f"<p>{_('and {0} more').format(len(rows) - DIGEST_LIMIT)}</p>")
 
-	body.append(
-		f'<p><a href="{get_url_to_list("Test Log")}">{_("Open the full list")}</a></p>'
-	)
+	body.append(f'<p><a href="{get_url_to_list("Test Log")}">{_("Open the full list")}</a></p>')
 	return "".join(body)
 
 

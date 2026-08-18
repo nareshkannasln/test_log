@@ -17,7 +17,7 @@ jobs:
 
     services:
       mariadb:
-        image: mariadb:10.6
+        image: mariadb:11.4
         env:
           MARIADB_ROOT_PASSWORD: root
         ports:
@@ -45,16 +45,18 @@ jobs:
 
       - uses: actions/setup-node@v4
         with:
-          node-version: "20"
+          node-version: "24"
 
       - name: Install bench
         run: |
           pip install frappe-bench
+          sudo apt-get update
           sudo apt-get install -y --no-install-recommends mariadb-client
 
       - name: Set up a bench with Frappe v16
         run: |
-          bench init --skip-redis-config-generation --frappe-branch version-16 --python "$(which python)" ~/frappe-bench
+          bench init --skip-redis-config-generation --skip-assets \
+            --frappe-branch version-16 --python "$(which python)" ~/frappe-bench
           cd ~/frappe-bench
           bench set-config -g redis_cache redis://localhost:6379
           bench set-config -g redis_queue redis://localhost:6379
@@ -62,10 +64,11 @@ jobs:
           bench set-config -g developer_mode 1
 
       - name: Bring the app in
+        # get-app rather than a copy: it is what registers the app in apps.txt and
+        # installs its requirements, which install-app then needs.
         run: |
-          cp -r "$GITHUB_WORKSPACE/apps/test_log" ~/frappe-bench/apps/test_log
           cd ~/frappe-bench
-          bench setup requirements --python
+          bench get-app --skip-assets test_log "$GITHUB_WORKSPACE/apps/test_log"
 
       - name: Create the site and install the app
         run: |

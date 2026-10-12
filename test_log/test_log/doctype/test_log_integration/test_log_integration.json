@@ -1,0 +1,80 @@
+{
+ "doctype": "DocType",
+ "name": "Test Log Integration",
+ "module": "Test Log",
+ "engine": "InnoDB",
+ "field_order": [
+  "enable_github",
+  "github_token",
+  "webhook_secret",
+  "github_user",
+  "enable_email",
+  "email_account",
+  "email_product",
+  "email_tester"
+ ],
+ "fields": [
+  {
+   "fieldname": "enable_github",
+   "fieldtype": "Check",
+   "label": "Enable Github",
+   "default": "0"
+  },
+  {
+   "fieldname": "github_token",
+   "fieldtype": "Password",
+   "label": "Github Token"
+  },
+  {
+   "fieldname": "webhook_secret",
+   "fieldtype": "Password",
+   "label": "Webhook Secret"
+  },
+  {
+   "fieldname": "github_user",
+   "fieldtype": "Link",
+   "label": "Github User",
+   "options": "User"
+  },
+  {
+   "fieldname": "enable_email",
+   "fieldtype": "Check",
+   "label": "Enable Email",
+   "default": "0"
+  },
+  {
+   "fieldname": "email_account",
+   "fieldtype": "Link",
+   "label": "Email Account",
+   "options": "Email Account"
+  },
+  {
+   "fieldname": "email_product",
+   "fieldtype": "Link",
+   "label": "Email Product",
+   "options": "Test Product"
+  },
+  {
+   "fieldname": "email_tester",
+   "fieldtype": "Link",
+   "label": "Email Tester",
+   "options": "User"
+  }
+ ],
+ "permissions": [
+  {
+   "role": "System Manager",
+   "read": 1,
+   "write": 1,
+   "create": 1,
+   "delete": 1,
+   "report": 1,
+   "export": 1,
+   "share": 1
+  }
+ ],
+ "istable": 0,
+ "editable_grid": 1,
+ "track_changes": 1,
+ "issingle": 1
+}

@@ -54,7 +54,15 @@
   "test_case",
   "reopen_count",
   "first_resolved_on",
-  "merged_into"
+  "merged_into",
+  "section_git",
+  "github_issue_url",
+  "github_pr_url",
+  "github_commit_url",
+  "github_merge_sha",
+  "section_replay",
+  "network_requests",
+  "replay_steps"
  ],
  "fields": [
   {
@@ -374,6 +382,56 @@
    "fieldtype": "Link",
    "label": "Merged Into",
    "options": "Test Log",
+   "read_only": 1
+  },
+  {
+   "fieldname": "section_git",
+   "fieldtype": "Section Break",
+   "label": "Git Links"
+  },
+  {
+   "fieldname": "github_issue_url",
+   "fieldtype": "Data",
+   "label": "GitHub Issue",
+   "options": "URL",
+   "read_only": 1
+  },
+  {
+   "fieldname": "github_pr_url",
+   "fieldtype": "Data",
+   "label": "Pull Request",
+   "options": "URL"
+  },
+  {
+   "fieldname": "github_commit_url",
+   "fieldtype": "Data",
+   "label": "Commit",
+   "options": "URL"
+  },
+  {
+   "fieldname": "github_merge_sha",
+   "fieldtype": "Data",
+   "label": "Github Merge Sha",
+   "read_only": 1,
+   "hidden": 1
+  },
+  {
+   "fieldname": "section_replay",
+   "fieldtype": "Section Break",
+   "label": "Capture Replay"
+  },
+  {
+   "fieldname": "network_requests",
+   "fieldtype": "Code",
+   "label": "Failed Network Requests",
+   "options": "JSON",
+   "read_only": 1
+  },
+  {
+   "fieldname": "replay_steps",
+   "fieldtype": "Code",
+   "label": "Steps Before Capture",
+   "options": "JSON",
    "read_only": 1
   }
  ],

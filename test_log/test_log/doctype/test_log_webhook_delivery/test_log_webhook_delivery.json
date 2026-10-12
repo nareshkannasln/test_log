@@ -1,0 +1,41 @@
+{
+ "doctype": "DocType",
+ "name": "Test Log Webhook Delivery",
+ "module": "Test Log",
+ "engine": "InnoDB",
+ "field_order": [
+  "delivery_id",
+  "repository",
+  "event"
+ ],
+ "fields": [
+  {
+   "fieldname": "delivery_id",
+   "fieldtype": "Data",
+   "label": "Delivery Id",
+   "unique": 1,
+   "reqd": 1
+  },
+  {
+   "fieldname": "repository",
+   "fieldtype": "Data",
+   "label": "Repository"
+  },
+  {
+   "fieldname": "event",
+   "fieldtype": "Data",
+   "label": "Event"
+  }
+ ],
+ "permissions": [
+  {
+   "role": "System Manager",
+   "read": 1,
+   "delete": 1
+  }
+ ],
+ "istable": 0,
+ "editable_grid": 1,
+ "track_changes": 1,
+ "autoname": "hash"
+}

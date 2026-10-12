@@ -22,7 +22,7 @@ async function loadWidget(page, { enabled = true } = {}) {
 	await page.route("**/api/method/test_log.api.get_feed", (route) =>
 		route.fulfill({ json: { message: [] } })
 	);
-	for (const file of ["core", "store", "capture", "annotate", "panel", "widget"]) {
+	for (const file of ["core", "trace", "store", "capture", "annotate", "panel", "widget"]) {
 		await page.addScriptTag({ path: path.resolve(`test_log/public/js/tester/${file}.js`) });
 	}
 	await page.addStyleTag({ path: path.resolve("test_log/public/css/tester.css") });
@@ -83,4 +83,39 @@ test("rejected capture remains queued for explicit retry", async ({ page }) => {
 	await expect(page.getByText("No access to this file")).toBeVisible();
 	await expect.poll(() => page.evaluate(() => window.test_log.store.count())).toBe(1);
 	await expect(page.getByText("Try again", { exact: true })).toBeVisible();
+});
+
+test("network capture redacts secrets and replay excludes input values", async ({ page }) => {
+	await loadWidget(page);
+	await page.evaluate(() => window.test_log.trace.start({ network: true, replay: true }));
+	await page.route("**/failed-request*", (route) =>
+		route.fulfill({
+			status: 500,
+			contentType: "application/json",
+			body: JSON.stringify({
+				error: "broken",
+				password: "never-store-me",
+				access_token: "secret-token",
+			}),
+		})
+	);
+	await page.evaluate(async () => {
+		const input = document.createElement("input");
+		input.type = "password";
+		input.value = "typed-secret";
+		document.body.append(input);
+		input.click();
+		await fetch("/failed-request?token=query-secret");
+	});
+	await expect
+		.poll(() => page.evaluate(() => JSON.parse(window.test_log.trace.network()).length))
+		.toBe(1);
+	const network = await page.evaluate(() => window.test_log.trace.network());
+	expect(network).toContain("redacted");
+	expect(network).not.toContain("never-store-me");
+	expect(network).not.toContain("secret-token");
+	expect(network).not.toContain("query-secret");
+	const replay = await page.evaluate(() => window.test_log.trace.replay());
+	expect(replay).toContain("click");
+	expect(replay).not.toContain("typed-secret");
 });

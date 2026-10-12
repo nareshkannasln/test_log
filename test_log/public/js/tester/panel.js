@@ -649,6 +649,8 @@
 					test_run: currentRun(),
 					product: runProduct(),
 					console_errors: consoleErrors || null,
+					network_requests: NS.trace?.network() || null,
+					replay_steps: NS.trace?.replay() || null,
 					captured_at: toServerDatetime(new Date()),
 				},
 				attachments,

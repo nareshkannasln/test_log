@@ -35,6 +35,7 @@ after_install = "test_log.install.after_install"
 # namespace, widget boots once everything else is on the page.
 _TESTER_WIDGET_JS = [
 	"/assets/test_log/js/tester/core.js",
+	"/assets/test_log/js/tester/trace.js",
 	"/assets/test_log/js/tester/store.js",
 	"/assets/test_log/js/tester/capture.js",
 	"/assets/test_log/js/tester/annotate.js",
@@ -163,6 +164,7 @@ extend_bootinfo = "test_log.boot.boot_session"
 # A comment on a test log is half of a conversation — Frappe stores it, but only this
 # tells the person on the other side of the log that it is there.
 doc_events = {
+	"Communication": {"after_insert": "test_log.integrations.on_communication"},
 	"Comment": {
 		"after_insert": "test_log.comments.on_comment",
 	},

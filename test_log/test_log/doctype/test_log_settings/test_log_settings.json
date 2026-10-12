@@ -47,7 +47,9 @@
   "section_break_report",
   "auto_attach_run_report",
   "column_break_report",
-  "include_evidence_links"
+  "include_evidence_links",
+  "capture_network_requests",
+  "capture_replay_steps"
  ],
  "fields": [
   {
@@ -245,7 +247,7 @@
   },
   {
    "default": "0",
-   "description": "Keeps a Word document attached to every test run — each log with its description and screenshots embedded — refreshed in the background whenever a log changes. Leave off to build it on demand from the run.",
+   "description": "Keeps a Word document attached to every test run \u2014 each log with its description and screenshots embedded \u2014 refreshed in the background whenever a log changes. Leave off to build it on demand from the run.",
    "fieldname": "auto_attach_run_report",
    "fieldtype": "Check",
    "label": "Keep a Report Attached to Each Run"
@@ -268,7 +270,7 @@
   },
   {
    "default": "1",
-   "description": "Only allow the status moves the app offers — Open cannot jump straight to Completed.",
+   "description": "Only allow the status moves the app offers \u2014 Open cannot jump straight to Completed.",
    "fieldname": "enforce_status_flow",
    "fieldtype": "Check",
    "label": "Enforce Status Flow"
@@ -313,6 +315,20 @@
    "fieldname": "send_daily_digest",
    "fieldtype": "Check",
    "label": "Send a Daily Digest"
+  },
+  {
+   "fieldname": "capture_network_requests",
+   "fieldtype": "Check",
+   "label": "Capture Failed Network Requests",
+   "default": "0",
+   "description": "Records same-origin failed fetch/XHR requests with redacted text responses (max 2 KB)."
+  },
+  {
+   "fieldname": "capture_replay_steps",
+   "fieldtype": "Check",
+   "label": "Capture Recent Interaction Steps",
+   "default": "0",
+   "description": "Records click targets and navigation for the previous 60 seconds. Input values are never recorded."
   }
  ],
  "index_web_pages_for_search": 1,

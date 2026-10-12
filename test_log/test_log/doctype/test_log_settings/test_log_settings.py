@@ -105,6 +105,8 @@ def widget_config(user: str | None = None) -> dict:
 			"page": bool(settings.capture_page_context),
 			"console": bool(settings.capture_console_errors),
 			"console_limit": settings.console_error_limit or 20,
+			"network": bool(settings.get("capture_network_requests")),
+			"replay": bool(settings.get("capture_replay_steps")),
 		},
 		"offline": {
 			"enabled": bool(settings.enable_offline_queue),

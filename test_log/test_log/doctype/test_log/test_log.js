@@ -27,13 +27,34 @@ const STATUS_PROMPTS = {
 frappe.ui.form.on("Test Log", {
 	refresh(frm) {
 		if (!can_edit_test_details()) {
-			const editable = new Set(["status", "resolution", "fixed_in_build"]);
+			const editable = new Set([
+				"status",
+				"resolution",
+				"fixed_in_build",
+				"github_pr_url",
+				"github_commit_url",
+			]);
 			frm.meta.fields
 				.filter((field) => !editable.has(field.fieldname))
 				.forEach((field) => {
 					frm.set_df_property(field.fieldname, "read_only", 1);
 				});
 		}
+		if (!frm.is_new())
+			frm.add_custom_button(
+				__("Create GitHub Issue"),
+				() =>
+					frappe.call({
+						method: "test_log.integrations.create_github_issue",
+						args: { test_log: frm.doc.name },
+						freeze: true,
+						callback(r) {
+							frm.reload_doc();
+							if (r.message) window.open(r.message, "_blank", "noopener");
+						},
+					}),
+				__("Actions")
+			);
 		frm.trigger("render_evidence");
 		frm.trigger("add_status_actions");
 		frm.trigger("add_share_action");

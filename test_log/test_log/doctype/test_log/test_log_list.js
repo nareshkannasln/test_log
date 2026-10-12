@@ -40,10 +40,13 @@ frappe.listview_settings["Test Log"] = {
 	},
 
 	onload(listview) {
+		const can_test =
+			frappe.session.user === "Administrator" ||
+			["Tester", "System Manager"].some((role) => frappe.user_roles.includes(role));
 		const statuses = frappe.boot.test_log_vocabulary?.statuses || Object.keys(STATUS_COLORS);
 
 		statuses
-			.filter((status) => status !== "Open")
+			.filter((status) => status !== "Open" && (status !== "Completed" || can_test))
 			.forEach((status) => {
 				listview.page.add_actions_menu_item(
 					__("Mark {0}", [__(status)]),
@@ -52,7 +55,7 @@ frappe.listview_settings["Test Log"] = {
 				);
 			});
 
-		BULK_FIELDS.forEach((field) => {
+		(can_test ? BULK_FIELDS : []).forEach((field) => {
 			listview.page.add_actions_menu_item(
 				field.label,
 				() => bulk_field(listview, field),
@@ -88,6 +91,10 @@ function selection_sheet(listview) {
 		freeze: true,
 		freeze_message: __("Building a sheet of {0} logs...", [names.length]),
 		callback(r) {
+			if (r.message?.queued) {
+				frappe.show_alert(__("Queued. You will be notified when it finishes."));
+				return;
+			}
 			if (!r.message?.file_url) return;
 
 			const skipped = r.message.skipped;
@@ -120,6 +127,10 @@ function selection_report(listview) {
 		freeze: true,
 		freeze_message: __("Building a report of {0} logs...", [names.length]),
 		callback(r) {
+			if (r.message?.queued) {
+				frappe.show_alert(__("Queued. You will be notified when it finishes."));
+				return;
+			}
 			if (!r.message?.file_url) return;
 
 			const skipped = r.message.skipped;
@@ -186,6 +197,10 @@ function bulk_field(listview, field) {
  * refuses to move, used to disappear from the count with no explanation.
  */
 function report_result(listview, result, requested) {
+	if (result?.queued) {
+		frappe.show_alert(__("Queued. You will be notified when it finishes."));
+		return;
+	}
 	const updated = result?.updated?.length || 0;
 	const skipped = result?.skipped || [];
 

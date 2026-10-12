@@ -43,7 +43,7 @@ _TESTER_WIDGET_JS = [
 ]
 _TESTER_WIDGET_CSS = ["/assets/test_log/css/tester.css"]
 
-app_include_js = _TESTER_WIDGET_JS
+app_include_js = [*_TESTER_WIDGET_JS, "/assets/test_log/js/jobs.js"]
 app_include_css = _TESTER_WIDGET_CSS
 
 # Portal pages are part of what gets tested too — the widget keeps itself hidden

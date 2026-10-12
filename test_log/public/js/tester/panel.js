@@ -859,6 +859,8 @@
 
 			notify(t("Building the report…"));
 			const report = await handlers.buildReport?.(run);
+			if (report?.queued)
+				notify(t("Report queued. Open Desk for the completion notification."));
 			if (report?.file_url) window.open(report.file_url, "_blank", "noopener");
 		}
 

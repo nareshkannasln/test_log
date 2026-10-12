@@ -53,12 +53,16 @@ def log_entry(entry: str | dict):
 	for row in _attachment_rows(entry):
 		doc.append("attachments", row)
 
+	savepoint = "capture_" + frappe.generate_hash(length=10)
+	frappe.db.savepoint(savepoint)
 	try:
 		doc.insert()
 	except frappe.UniqueValidationError:
 		# Two flushes raced. The other one won; hand back its log.
-		frappe.db.rollback()
-		existing = frappe.db.get_value("Test Log", {"client_id": client_id}, "name")
+		frappe.db.rollback(save_point=savepoint)
+		if not client_id:
+			raise
+		existing = frappe.db.get_value("Test Log", {"client_id": client_id}, "name", for_update=True)
 		if not existing:
 			raise
 		return _feed_row(existing, duplicate=True)
@@ -271,6 +275,7 @@ def _claim_files(doc):
 
 
 def _feed_row(name: str, duplicate: bool = False) -> dict:
+	frappe.has_permission("Test Log", "read", doc=name, throw=True)
 	log = frappe.db.get_value(
 		"Test Log",
 		name,

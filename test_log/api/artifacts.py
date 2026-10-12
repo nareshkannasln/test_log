@@ -35,7 +35,7 @@ def deliver(content: bytes, doc, file_name: str, attach: int) -> dict:
 	A selection of logs has no record to hang off, so it becomes a private file owned by
 	whoever asked for it.
 	"""
-	attach = bool(attach and doc)
+	attach = bool(attach and doc and frappe.has_permission(doc.doctype, "write", doc=doc))
 	target = {"attached_to_doctype": doc.doctype, "attached_to_name": doc.name} if attach else {}
 
 	if attach:
@@ -60,4 +60,4 @@ def deliver(content: bytes, doc, file_name: str, attach: int) -> dict:
 		}
 	).insert(ignore_permissions=True)
 
-	return {"file_name": file_name, "file_url": file.file_url, "size": file.file_size}
+	return {"file_name": file_name, "file_url": file.file_url, "size": file.file_size, "attached": attach}

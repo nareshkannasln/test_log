@@ -15,6 +15,8 @@ from test_log.constants import (
 	VERIFIED_STATUSES,
 	can_transition,
 )
+from test_log.evidence import readable_file
+from test_log.jobs import background_large
 from test_log.test_log.doctype.test_run.test_run import refresh_summary
 
 SIMILAR_LIMIT = 5
@@ -27,6 +29,7 @@ STOP_WORDS = set(
 
 class TestLog(Document):
 	def validate(self):
+		self.validate_developer_changes()
 		self.set_default_developer()
 		self.validate_status_flow()
 		self.validate_run_open()
@@ -36,6 +39,7 @@ class TestLog(Document):
 
 	def on_update(self):
 		self.share_and_assign()
+		self.inherit_run_shares()
 		self.notify_status_change()
 		refresh_summary(self.test_run)
 
@@ -134,7 +138,8 @@ class TestLog(Document):
 			if not row.file_url:
 				continue
 
-			size = frappe.db.get_value("File", {"file_url": row.file_url}, "file_size")
+			file = readable_file(row.file_url, self, throw=True)
+			size = file.file_size
 			if size and size > limit_mb * 1024 * 1024:
 				frappe.throw(
 					_("Row {0}: {1} is over the {2} MB limit set in Test Log Settings.").format(
@@ -144,6 +149,69 @@ class TestLog(Document):
 				)
 
 	# ------------------------------------------------------------------ helpers
+
+	def validate_developer_changes(self):
+		roles = set(frappe.get_roles())
+		if frappe.session.user == "Administrator" or roles & {"Tester", "System Manager"}:
+			return
+		previous = self.get_doc_before_save()
+		if not previous:
+			return
+		# Shared write access is only for the developer's response, including REST/bulk saves.
+		allowed = {"status", "resolution", "fixed_in_build"}
+		for field in self.meta.fields:
+			if field.fieldtype in frappe.model.table_fields:
+				columns = [
+					f.fieldname
+					for f in frappe.get_meta(field.options).fields
+					if f.fieldtype not in frappe.model.no_value_fields
+				]
+				before = [[row.get(c) for c in columns] for row in previous.get(field.fieldname)]
+				after = [[row.get(c) for c in columns] for row in self.get(field.fieldname)]
+				if before != after:
+					frappe.throw(_("Only testers can change evidence."), frappe.PermissionError)
+				continue
+			if field.fieldtype in frappe.model.no_value_fields or field.fieldname in allowed:
+				continue
+			if self.has_value_changed(field.fieldname):
+				frappe.throw(_("Only testers can change {0}.").format(_(field.label)), frappe.PermissionError)
+		if self.status != previous.status and self.status == "Completed":
+			frappe.throw(_("Only testers can verify a fix."), frappe.PermissionError)
+
+	def inherit_run_shares(self):
+		previous = self.get_doc_before_save()
+		if not self.test_run or (previous and previous.test_run == self.test_run):
+			return
+		for share in frappe.get_all(
+			"DocShare",
+			filters={"share_doctype": "Test Run", "share_name": self.test_run},
+			fields=["user", "everyone", "read", "write", "share"],
+		):
+			existing = (
+				frappe.db.get_value(
+					"DocShare",
+					{
+						"share_doctype": self.doctype,
+						"share_name": self.name,
+						**({"everyone": 1} if share.everyone else {"user": share.user}),
+					},
+					["read", "write", "share"],
+					as_dict=True,
+				)
+				or {}
+			)
+			frappe.share.add_docshare(
+				self.doctype,
+				self.name,
+				share.user,
+				everyone=share.everyone,
+				**{
+					key: max(share.get(key) or 0, existing.get(key) or 0)
+					for key in ("read", "write", "share")
+				},
+				flags={"ignore_share_permission": True},
+				notify=0,
+			)
 
 	def set_default_developer(self):
 		if self.assigned_developer or not self.product:
@@ -221,17 +289,25 @@ class TestLog(Document):
 		"""
 		# .get() rather than attribute access: an app updated but not yet migrated must
 		# not break saving a test log.
-		if not self.test_run or not _settings().get("auto_attach_run_report"):
+		if not _settings().get("auto_attach_run_report"):
 			return
 
-		frappe.enqueue(
-			"test_log.api.report.refresh_run_report",
-			queue="long",
-			job_id=f"test-log-report::{self.test_run}",
-			deduplicate=True,
-			enqueue_after_commit=True,
-			test_run=self.test_run,
-		)
+		previous = self.get_doc_before_save()
+		if previous and previous.status == self.status and previous.test_run == self.test_run:
+			return
+
+		runs = {self.test_run, previous.test_run if previous else None} - {None, ""}
+		for run in runs:
+			if not frappe.has_permission("Test Run", "write", doc=run):
+				continue
+			frappe.enqueue(
+				"test_log.api.report.refresh_run_report",
+				queue="long",
+				job_id=f"test-log-report::{run}",
+				deduplicate=True,
+				enqueue_after_commit=True,
+				test_run=run,
+			)
 
 	def counterparts(self) -> set[str]:
 		"""The other people on this log — everyone but whoever is acting."""
@@ -313,6 +389,7 @@ def set_status(name: str, status: str, resolution: str | None = None, note: str 
 
 
 @frappe.whitelist()
+@background_large
 def bulk_set_status(names: str | list, status: str):
 	"""Update many logs at once from the list view.
 
@@ -344,6 +421,7 @@ def bulk_set_status(names: str | list, status: str):
 
 
 @frappe.whitelist()
+@background_large
 def bulk_update_field(names: str | list, fieldname: str, value):
 	"""Set one field on many logs — assign a developer, move them to another run.
 
@@ -412,9 +490,9 @@ def find_similar(
 	"""Logs that look like the one being written — the same finding filed twice is
 	the commonest complaint about a capture panel.
 
-	Matching is deliberately loose: any distinctive word from the subject, narrowed to
-	the same run or product, and anything already filed against the same route or
-	feature. get_list keeps it to logs the caller is allowed to see.
+	Match indexed route/feature context first, then distinctive subject words in the
+	latest 200 logs in the same run or product. get_list keeps both stages restricted
+	to logs the caller is allowed to see.
 	"""
 	if not _settings().get("warn_on_duplicates"):
 		return []
@@ -429,7 +507,7 @@ def find_similar(
 	elif product:
 		scope["product"] = product
 
-	or_filters = [["subject", "like", f"%{word}%"] for word in words]
+	or_filters = []
 	if page_route:
 		or_filters.append(["page_route", "=", page_route])
 	if module_feature:
@@ -440,14 +518,31 @@ def find_similar(
 	if exclude:
 		filters["name"] = ["!=", exclude]
 
-	candidates = frappe.get_list(
-		"Test Log",
-		filters=filters,
-		or_filters=or_filters,
-		fields=["name", "subject", "status", "severity", "module_feature", "page_route", "creation"],
-		order_by="creation desc",
-		limit=20,
+	fields = ["name", "subject", "status", "severity", "module_feature", "page_route", "creation"]
+	candidates = (
+		frappe.get_list(
+			"Test Log",
+			filters=filters,
+			or_filters=or_filters,
+			fields=fields,
+			order_by="creation desc",
+			limit=20,
+		)
+		if or_filters
+		else []
 	)
+	if words and len(candidates) < SIMILAR_LIMIT:
+		# Keep the fallback bounded: score recent scoped logs in Python, avoiding a
+		# full-table OR of leading-wildcard LIKE predicates on every keystroke.
+		seen = {row.name for row in candidates}
+		recent = frappe.get_list(
+			"Test Log",
+			filters=filters,
+			fields=fields,
+			order_by="creation desc",
+			limit=200,
+		)
+		candidates.extend(row for row in recent if row.name not in seen and _score(row, words, None, None))
 
 	scored = sorted(candidates, key=lambda row: -_score(row, words, module_feature, page_route))
 	return scored[:SIMILAR_LIMIT]

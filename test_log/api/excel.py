@@ -18,6 +18,7 @@ from frappe import _
 from frappe.utils import get_url
 
 from test_log.api.artifacts import deliver, plain_text
+from test_log.jobs import background_large
 from test_log.test_log.doctype.test_log_settings.test_log_settings import get_settings
 
 SHEET_PREFIX = "Test Logs"
@@ -34,6 +35,7 @@ WIDTH_EVIDENCE = 34
 
 
 @frappe.whitelist()
+@background_large
 def build_run_sheet(test_run: str, attach: int = 0):
 	"""Excel sheet for a whole run — every log in it, oldest first."""
 	run = frappe.get_doc("Test Run", test_run)
@@ -41,6 +43,10 @@ def build_run_sheet(test_run: str, attach: int = 0):
 
 	names = frappe.get_all("Test Log", filters={"test_run": run.name}, pluck="name", order_by="creation asc")
 
+	readable = [name for name in names if frappe.has_permission("Test Log", "read", doc=name)]
+	skipped = len(names) - len(readable)
+	names = readable
+	attach = int(attach) if not skipped else 0
 	if not names:
 		frappe.throw(_("No test logs in this run yet."))
 
@@ -48,11 +54,12 @@ def build_run_sheet(test_run: str, attach: int = 0):
 
 	return deliver(content, run, f"{SHEET_PREFIX} - {run.name}.xlsx", int(attach)) | {
 		"logs": len(names),
-		"skipped": 0,
+		"skipped": skipped,
 	}
 
 
 @frappe.whitelist()
+@background_large
 def build_selection_sheet(names: str | list, attach: int = 0):
 	"""One sheet covering the logs ticked in the list view.
 

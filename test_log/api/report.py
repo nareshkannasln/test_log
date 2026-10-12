@@ -210,6 +210,9 @@ def _log_section(document: Document, log, with_heading: bool = True):
 		document.heading(_("Console Errors"), level=2)
 		document.paragraph(log.console_errors[:CONSOLE_EXCERPT], size=16, color="616E7C")
 
+	_block(document, _("Failed Network Requests"), log.get("network_requests"))
+	_block(document, _("Steps Before Capture"), log.get("replay_steps"))
+
 	if log.resolution or log.fixed_in_build:
 		document.heading(_("Developer Update"), level=2)
 		_block(document, None, log.resolution)

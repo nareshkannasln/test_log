@@ -29,6 +29,9 @@ STOP_WORDS = set(
 
 class TestLog(Document):
 	def validate(self):
+		from test_log.integrations import validate_git_links
+
+		validate_git_links(self)
 		self.validate_developer_changes()
 		self.set_default_developer()
 		self.validate_status_flow()
@@ -161,7 +164,7 @@ class TestLog(Document):
 		if not previous:
 			return
 		# Shared write access is only for the developer's response, including REST/bulk saves.
-		allowed = {"status", "resolution", "fixed_in_build"}
+		allowed = {"status", "resolution", "fixed_in_build", "github_pr_url", "github_commit_url"}
 		for field in self.meta.fields:
 			if field.fieldtype in frappe.model.table_fields:
 				columns = [

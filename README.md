@@ -328,3 +328,35 @@ build**, scoped by product and fixed build; normal permissions and background th
 the same product, then closes the duplicate with an audit link. **Evidence Discussion** supports
 replies, an annotation label and comma-separated user mentions; mentioned users must already have
 read access. These actions do not grant access to mentioned users.
+
+## GitHub, support email and capture context
+
+A System Manager configures **Test Log Integration**. GitHub requires a repository URL on each
+product, an issue-writing repository token, a webhook secret and an enabled integration user
+with write access to the relevant logs. Credentials are Password fields on this restricted Single.
+The Test Log form offers **Create GitHub Issue**, plus PR and commit URL fields constrained to
+that product's repository.
+
+Configure GitHub to POST `pull_request` and `release` events to
+`https://your-site/api/method/test_log.integrations.github_webhook?product=YOUR_URL_ENCODED_PRODUCT`.
+Use the configured secret and JSON content type. The endpoint validates GitHub's HMAC-SHA256
+signature and repository before queueing work; delivery IDs prevent reprocessing.
+A merged PR mentioning a TL identifier moves its log to Fixed. A subsequent published release
+fills `fixed_in_build` only when GitHub confirms that release contains the merge commit; the
+integration never guesses a release tag from a PR branch. Completed and Won't Fix logs are not
+reopened by a merge. Both event handlers run as the configured integration user.
+
+For **email-to-log**, configure a Frappe inbound Email Account with Append To = Communication,
+then choose it, a product and a tester in Test Log Integration and enable email capture. Incoming,
+unlinked mail becomes an idempotent log; the original Communication is linked for reference.
+The sender is recorded in the description, while the configured tester is the responsible user.
+Mail attachments are retained on the Communication, not automatically exposed as evidence.
+
+Test Log Settings offers separate opt-in toggles for **failed network requests** and **recent
+interaction steps**. Capture includes up to 20 same-origin fetch/XHR failures with redacted response
+excerpts (2 KB each), and at most 50 click/navigation steps from the last 60 seconds. Query strings,
+request headers/bodies, cross-origin requests and typed input values are excluded. Response text
+may still contain application data; enable this only for the testing audience. These excerpts
+appear on the log and in Word exports. The interaction history is an event replay, not a screen video.
+
+Webhook validation follows [GitHub's signature guidance](https://docs.github.com/en/webhooks/using-webhooks/validating-webhook-deliveries).

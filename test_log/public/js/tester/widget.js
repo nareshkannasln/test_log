@@ -402,6 +402,7 @@
 		}
 
 		NS.errors.setLimit(config.context?.console_limit);
+		NS.trace?.start(config.context);
 
 		buildPanel();
 		buildFab();

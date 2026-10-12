@@ -161,6 +161,8 @@ def _log_values(entry: frappe._dict) -> dict:
 		"page_url": entry.get("page_url"),
 		"viewport": entry.get("viewport"),
 		"console_errors": entry.get("console_errors"),
+		"network_requests": cstr(entry.get("network_requests"))[:60000],
+		"replay_steps": cstr(entry.get("replay_steps"))[:20000],
 	}
 
 	steps = cstr(entry.get("steps_to_reproduce")).strip()

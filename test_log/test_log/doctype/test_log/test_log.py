@@ -36,6 +36,9 @@ class TestLog(Document):
 		self.validate_duplicate_of()
 		self.validate_attachments()
 		self.stamp_resolution()
+		from test_log.management import apply_sla
+
+		apply_sla(self)
 
 	def on_update(self):
 		self.share_and_assign()
@@ -322,11 +325,16 @@ class TestLog(Document):
 		if not recipients:
 			return
 
+		from test_log.management import ready_to_verify_url
+
+		body = f"<p>{frappe.utils.escape_html(self.subject)}</p>"
+		if self.status == "Fixed":
+			body += f'<p><a href="{ready_to_verify_url(self.tester)}">{_("Ready to verify")}</a></p>'
 		notify(
 			self,
 			list(recipients),
 			_("{0} moved from {1} to {2}").format(self.name, _(previous.status), _(self.status)),
-			f"<p>{frappe.utils.escape_html(self.subject)}</p>",
+			body,
 		)
 
 

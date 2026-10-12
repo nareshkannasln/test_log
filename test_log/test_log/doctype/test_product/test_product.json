@@ -13,7 +13,12 @@
   "repository_url",
   "default_developer",
   "section_break_desc",
-  "description"
+  "description",
+  "section_sla",
+  "sla_critical_days",
+  "sla_high_days",
+  "sla_medium_days",
+  "sla_low_days"
  ],
  "fields": [
   {
@@ -56,6 +61,43 @@
    "fieldname": "description",
    "fieldtype": "Small Text",
    "label": "Description"
+  },
+  {
+   "fieldname": "section_sla",
+   "fieldtype": "Section Break",
+   "label": "Severity SLA (calendar days)"
+  },
+  {
+   "fieldname": "sla_critical_days",
+   "fieldtype": "Int",
+   "label": "Critical SLA Days",
+   "non_negative": 1,
+   "default": "1",
+   "description": "0 disables this severity SLA."
+  },
+  {
+   "fieldname": "sla_high_days",
+   "fieldtype": "Int",
+   "label": "High SLA Days",
+   "non_negative": 1,
+   "default": "3",
+   "description": "0 disables this severity SLA."
+  },
+  {
+   "fieldname": "sla_medium_days",
+   "fieldtype": "Int",
+   "label": "Medium SLA Days",
+   "non_negative": 1,
+   "default": "7",
+   "description": "0 disables this severity SLA."
+  },
+  {
+   "fieldname": "sla_low_days",
+   "fieldtype": "Int",
+   "label": "Low SLA Days",
+   "non_negative": 1,
+   "default": "14",
+   "description": "0 disables this severity SLA."
   }
  ],
  "index_web_pages_for_search": 1,

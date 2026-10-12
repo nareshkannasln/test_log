@@ -24,7 +24,15 @@ def count_by_status(test_run: str | None = None):
 
 class TestRun(Document):
 	def validate(self):
+		from test_log.management import validate_cases
+
+		validate_cases(self)
 		self.validate_sign_off()
+
+	def on_update(self):
+		from test_log.management import raise_failed_cases
+
+		raise_failed_cases(self)
 
 	def validate_sign_off(self):
 		"""Signing off says the sheet is finished, so it has to actually be finished."""
@@ -32,9 +40,18 @@ class TestRun(Document):
 		if self.status != "Signed Off" or (previous and previous.status == "Signed Off"):
 			return
 
+		from test_log.management import require_tester
+
+		require_tester()
+
 		if self.flags.ignore_unsettled_logs:
 			self.stamp_sign_off()
 			return
+
+		if any(row.result in ("Not Run", "Fail", "Blocked") for row in self.get("cases", [])):
+			frappe.throw(
+				_("Resolve unfinished or failed cases before signing off, or provide a waiver note.")
+			)
 
 		unsettled = frappe.db.count("Test Log", {"test_run": self.name, "status": ["in", UNSETTLED_STATUSES]})
 		if unsettled:

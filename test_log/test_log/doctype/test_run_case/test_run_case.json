@@ -1,0 +1,83 @@
+{
+ "doctype": "DocType",
+ "name": "Test Run Case",
+ "module": "Test Log",
+ "engine": "InnoDB",
+ "field_order": [
+  "test_case",
+  "title",
+  "steps",
+  "expected_result",
+  "result",
+  "actual_result",
+  "test_log",
+  "executed_by",
+  "executed_on"
+ ],
+ "fields": [
+  {
+   "fieldname": "test_case",
+   "fieldtype": "Link",
+   "label": "Test Case",
+   "options": "Test Case",
+   "reqd": 1,
+   "in_list_view": 1
+  },
+  {
+   "fieldname": "title",
+   "fieldtype": "Data",
+   "label": "Title",
+   "read_only": 1,
+   "in_list_view": 1
+  },
+  {
+   "fieldname": "steps",
+   "fieldtype": "Text Editor",
+   "label": "Steps",
+   "read_only": 1
+  },
+  {
+   "fieldname": "expected_result",
+   "fieldtype": "Small Text",
+   "label": "Expected Result",
+   "read_only": 1
+  },
+  {
+   "fieldname": "result",
+   "fieldtype": "Select",
+   "label": "Result",
+   "options": "Not Run\nPass\nFail\nBlocked\nSkipped",
+   "default": "Not Run",
+   "in_list_view": 1
+  },
+  {
+   "fieldname": "actual_result",
+   "fieldtype": "Small Text",
+   "label": "Actual Result"
+  },
+  {
+   "fieldname": "test_log",
+   "fieldtype": "Link",
+   "label": "Test Log",
+   "options": "Test Log",
+   "read_only": 1
+  },
+  {
+   "fieldname": "executed_by",
+   "fieldtype": "Link",
+   "label": "Executed By",
+   "options": "User",
+   "read_only": 1
+  },
+  {
+   "fieldname": "executed_on",
+   "fieldtype": "Datetime",
+   "label": "Executed On",
+   "read_only": 1
+  }
+ ],
+ "permissions": [],
+ "istable": 1,
+ "editable_grid": 1,
+ "track_changes": 0
+}

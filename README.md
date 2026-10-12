@@ -310,3 +310,21 @@ npm run test:widget
 The server suite includes attachment permissions, developer field protection, inherited shares,
 digest order, export filtering, savepoint retries and background-action permissions. Browser
 smoke tests also run in CI.
+
+## Test management
+
+Create reusable **Test Cases** per product, then choose **Add Test Cases** on a Test Run.
+Rows snapshot the case title, steps and expected result. Record Pass, Fail, Blocked or Skipped;
+Fail requires an actual result and creates one linked Test Log. Coverage is `(Pass + Fail) / total`.
+Signed-off results are immutable. Unexecuted, failed or blocked cases require a documented waiver
+through the existing forced sign-off action.
+
+Product SLA fields set a missing target date from the tested date in calendar days (Critical 1,
+High 3, Medium 7, Low 14 by default; zero disables the severity). Explicit target dates are preserved.
+Fixed notifications link to **Ready to verify**. The Test Log list menu offers **Verify all in this
+build**, scoped by product and fixed build; normal permissions and background thresholds apply.
+
+**Merge Duplicate** moves evidence, timeline comments and evidence threads to an original log in
+the same product, then closes the duplicate with an audit link. **Evidence Discussion** supports
+replies, an annotation label and comma-separated user mentions; mentioned users must already have
+read access. These actions do not grant access to mentioned users.

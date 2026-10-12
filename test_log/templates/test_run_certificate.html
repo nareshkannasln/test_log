@@ -1,0 +1,23 @@
+<!DOCTYPE html>
+<html><head><meta charset="utf-8"><style>
+body {font-family: sans-serif; color: #183044; padding: 30px; font-size: 12px;}
+h1 {font-size: 27px; border-bottom: 3px solid #183044; padding-bottom: 15px;}
+h2 {margin-top: 25px; font-size: 17px;} table {width: 100%; border-collapse: collapse;}
+td, th {text-align: left; padding: 9px; border-bottom: 1px solid #cbd5df;}
+.notes {white-space: pre-wrap; padding: 15px; background: #f0f4f8;} .footer {margin-top: 40px; color: #536779;}
+</style></head><body>
+<h1>{{ _("Test Run Sign-off Certificate") }}</h1>
+<h2>{{ run.title | e }}</h2>
+<table>
+<tr><th>{{ _("Test Run") }}</th><td>{{ run.name | e }}</td><th>{{ _("Product") }}</th><td>{{ run.product | e }}</td></tr>
+<tr><th>{{ _("Build / Version") }}</th><td>{{ (run.build_version or "") | e }}</td><th>{{ _("Run Date") }}</th><td>{{ run.run_date | e }}</td></tr>
+<tr><th>{{ _("Signed Off By") }}</th><td>{{ run.signed_off_by | e }}</td><th>{{ _("Signed Off On") }}</th><td>{{ run.signed_off_on | e }}</td></tr>
+</table>
+<h2>{{ _("Defect Summary") }} — {{ total }}</h2>
+<table><tr>{% for status, count in counts.items() %}<th>{{ _(status) | e }}</th>{% endfor %}</tr><tr>{% for status, count in counts.items() %}<td>{{ count }}</td>{% endfor %}</tr></table>
+<h2>{{ _("Test Execution") }}</h2>
+<table><tr><th>{{ _("Cases") }}</th><th>{{ _("Pass") }}</th><th>{{ _("Fail") }}</th><th>{{ _("Blocked") }}</th><th>{{ _("Skipped") }}</th><th>{{ _("Coverage") }}</th></tr>
+<tr><td>{{ run.case_count }}</td><td>{{ run.passed_count }}</td><td>{{ run.failed_count }}</td><td>{{ run.blocked_count }}</td><td>{{ run.skipped_count }}</td><td>{{ run.coverage_percent }}%</td></tr></table>
+<h2>{{ _("Sign-off Notes and Waivers") }}</h2><div class="notes">{{ (run.sign_off_notes or _("No waiver recorded.")) | e }}</div>
+<p class="footer">{{ _("This certificate records the run's signed-off decision and its current summary counts.") }}</p>
+</body></html>

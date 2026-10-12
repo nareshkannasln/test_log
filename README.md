@@ -360,3 +360,27 @@ may still contain application data; enable this only for the testing audience. T
 appear on the log and in Word exports. The interaction history is an event replay, not a screen video.
 
 Webhook validation follows [GitHub's signature guidance](https://docs.github.com/en/webhooks/using-webhooks/validating-webhook-deliveries).
+
+## Quality reporting and sign-off
+
+The workspace includes permission-scoped charts for open logs by developer, first-fix time in
+calendar days by severity, reopened/ever-resolved logs by developer and product, and defects by
+build. Charts show the 20 largest groups; **Test Quality Metrics** includes all groups and sample
+sizes. Reopen tracking begins when this upgrade is installed; historical resolved timestamps are
+used when available. **SLA Breached** counts unresolved logs past their target; **SLA At Risk**
+counts those due today or tomorrow.
+
+**Test Build Comparison** compares two build labels within one product. Fixed/open defects use
+current status and recorded fixed build; case regressions compare the latest accessible execution
+of each case in each build (Pass → Fail). This is not a reconstruction of historical defect states
+that were never recorded. The report uses only records the reader can access.
+
+After signing off a run, choose **Sign-off Certificate** to download a printable PDF with the
+signer, notes/waivers, defect counts and case coverage. Every included log must be readable.
+The certificate records the signed decision and current summary counts; it is not a cryptographic
+signature. PDF generation uses the site's standard Frappe/wkhtmltopdf configuration.
+
+The list menu's **Add suggested saved filters** installs My open Critical, Waiting on me,
+Needs Info from me and Ready to verify for the current user. It preserves existing filters.
+Set the user's language to Tamil or Hindi for the shipped workflow labels, statuses, capture
+controls and reporting translations; untranslated messages use Frappe's English fallback.

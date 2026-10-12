@@ -35,6 +35,7 @@ def before_install():
 def after_install():
 	create_number_cards()
 	create_dashboard_chart()
+	setup_reporting()
 	setup_tester_mode()
 	frappe.db.commit()
 
@@ -99,3 +100,53 @@ def create_dashboard_chart():
 			"number_of_groups": 0,
 		}
 	).insert(ignore_permissions=True)
+
+
+def setup_reporting():
+	"""Idempotent workspace resources for both fresh installs and upgrades."""
+	from test_log.analytics import CHARTS
+
+	if not frappe.db.exists("Dashboard Chart Source", "Test Quality"):
+		frappe.get_doc(
+			{
+				"doctype": "Dashboard Chart Source",
+				"source_name": "Test Quality",
+				"name": "Test Quality",
+				"module": "Test Log",
+				"timeseries": 0,
+			}
+		).insert(ignore_permissions=True)
+	for title in CHARTS:
+		if not frappe.db.exists("Dashboard Chart", title):
+			frappe.get_doc(
+				{
+					"doctype": "Dashboard Chart",
+					"name": title,
+					"chart_name": title,
+					"chart_type": "Custom",
+					"source": "Test Quality",
+					"type": "Bar",
+					"is_public": 1,
+					"filters_json": "[]",
+					"timeseries": 0,
+					"document_type": "Test Log",
+				}
+			).insert(ignore_permissions=True)
+	for title, method, color in (
+		("SLA Breached", "sla_breached", "red"),
+		("SLA At Risk", "sla_at_risk", "orange"),
+	):
+		if not frappe.db.exists("Number Card", title):
+			frappe.get_doc(
+				{
+					"doctype": "Number Card",
+					"name": title,
+					"label": title,
+					"type": "Custom",
+					"method": "test_log.analytics." + method,
+					"document_type": "Test Log",
+					"is_public": 1,
+					"color": color,
+					"filters_json": "[]",
+				}
+			).insert(ignore_permissions=True)

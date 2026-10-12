@@ -1,0 +1,22 @@
+{
+ "doctype": "Report",
+ "name": "Test Build Comparison",
+ "report_name": "Test Build Comparison",
+ "module": "Test Log",
+ "is_standard": "Yes",
+ "report_type": "Script Report",
+ "ref_doctype": "Test Log",
+ "roles": [
+  {
+   "role": "Tester"
+  },
+  {
+   "role": "System Manager"
+  },
+  {
+   "role": "Developer"
+  }
+ ],
+ "disabled": 0,
+ "prepared_report": 0
+}

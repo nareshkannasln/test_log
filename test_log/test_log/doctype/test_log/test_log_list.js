@@ -51,6 +51,14 @@ frappe.listview_settings["Test Log"] = {
 		listview.page.add_inner_button(__("Ready to verify"), () =>
 			frappe.set_route("List", "Test Log", { status: "Fixed", tester: frappe.session.user })
 		);
+		listview.page.add_menu_item(__("Add suggested saved filters"), () =>
+			frappe.call({
+				method: "test_log.analytics.install_saved_filters",
+				callback() {
+					frappe.msgprint(__("Saved filters added. Reload this list to see them."));
+				},
+			})
+		);
 		const statuses = frappe.boot.test_log_vocabulary?.statuses || Object.keys(STATUS_COLORS);
 
 		statuses

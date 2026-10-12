@@ -59,6 +59,21 @@ frappe.ui.form.on("Test Run", {
 			__("View")
 		);
 
+		if (frm.doc.status === "Signed Off")
+			frm.add_custom_button(
+				__("Sign-off Certificate"),
+				() =>
+					frappe.call({
+						method: "test_log.analytics.sign_off_certificate",
+						args: { test_run: frm.doc.name },
+						freeze: true,
+						callback(r) {
+							if (r.message?.file_url)
+								window.open(r.message.file_url, "_blank", "noopener");
+						},
+					}),
+				__("View")
+			);
 		frm.add_custom_button(__("Word Report"), () => build_report(frm), __("View"));
 
 		frm.add_custom_button(__("Excel Sheet"), () => build_sheet(frm), __("View"));

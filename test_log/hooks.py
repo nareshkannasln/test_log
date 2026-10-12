@@ -276,3 +276,5 @@ has_permission = {
 permission_query_conditions = {
 	"Test Evidence Comment": "test_log.test_log.doctype.test_evidence_comment.test_evidence_comment.permission_query_conditions",
 }
+
+after_migrate = "test_log.install.setup_reporting"

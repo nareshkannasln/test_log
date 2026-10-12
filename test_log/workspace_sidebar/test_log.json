@@ -60,6 +60,50 @@
    "link_type": "Report",
    "show_arrow": 0,
    "type": "Link"
+  },
+  {
+   "label": "Test Case",
+   "link_to": "Test Case",
+   "link_type": "DocType",
+   "type": "Link",
+   "child": 0,
+   "indent": 0,
+   "collapsible": 1,
+   "keep_closed": 0,
+   "show_arrow": 0
+  },
+  {
+   "label": "Test Quality Metrics",
+   "link_to": "Test Quality Metrics",
+   "link_type": "Report",
+   "type": "Link",
+   "child": 0,
+   "indent": 0,
+   "collapsible": 1,
+   "keep_closed": 0,
+   "show_arrow": 0
+  },
+  {
+   "label": "Test Build Comparison",
+   "link_to": "Test Build Comparison",
+   "link_type": "Report",
+   "type": "Link",
+   "child": 0,
+   "indent": 0,
+   "collapsible": 1,
+   "keep_closed": 0,
+   "show_arrow": 0
+  },
+  {
+   "label": "Test Log Integration",
+   "link_to": "Test Log Integration",
+   "link_type": "DocType",
+   "type": "Link",
+   "child": 0,
+   "indent": 0,
+   "collapsible": 1,
+   "keep_closed": 0,
+   "show_arrow": 0
   }
  ],
  "modified": "2026-08-10 18:49:50.665252",

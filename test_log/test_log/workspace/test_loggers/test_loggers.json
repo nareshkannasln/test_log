@@ -4,9 +4,25 @@
   {
    "chart_name": "Test Logs by Status",
    "label": "Test Logs by Status"
+  },
+  {
+   "chart_name": "Open Logs by Developer",
+   "label": "Open Logs by Developer"
+  },
+  {
+   "chart_name": "Mean Fix Time by Severity",
+   "label": "Mean Fix Time by Severity"
+  },
+  {
+   "chart_name": "Reopen Rate by Developer and Product",
+   "label": "Reopen Rate by Developer and Product"
+  },
+  {
+   "chart_name": "Defects by Build",
+   "label": "Defects by Build"
   }
  ],
- "content": "[{\"id\": \"tl01\", \"type\": \"header\", \"data\": {\"text\": \"<span class=\\\"h4\\\"><b>Test Log</b></span>\", \"col\": 12}}, {\"id\": \"tl02\", \"type\": \"number_card\", \"data\": {\"number_card_name\": \"Open Test Logs\", \"col\": 3}}, {\"id\": \"tl03\", \"type\": \"number_card\", \"data\": {\"number_card_name\": \"Ongoing Test Logs\", \"col\": 3}}, {\"id\": \"tl04\", \"type\": \"number_card\", \"data\": {\"number_card_name\": \"Fixed Test Logs\", \"col\": 3}}, {\"id\": \"tl05\", \"type\": \"number_card\", \"data\": {\"number_card_name\": \"Completed Test Logs\", \"col\": 3}}, {\"id\": \"tl06\", \"type\": \"spacer\", \"data\": {\"col\": 12}}, {\"id\": \"tl07\", \"type\": \"chart\", \"data\": {\"chart_name\": \"Test Logs by Status\", \"col\": 12}}, {\"id\": \"tl08\", \"type\": \"header\", \"data\": {\"text\": \"<span class=\\\"h4\\\"><b>Shortcuts</b></span>\", \"col\": 12}}, {\"id\": \"tl09\", \"type\": \"shortcut\", \"data\": {\"shortcut_name\": \"Test Log\", \"col\": 3}}, {\"id\": \"tl10\", \"type\": \"shortcut\", \"data\": {\"shortcut_name\": \"Test Run\", \"col\": 3}}, {\"id\": \"tl11\", \"type\": \"shortcut\", \"data\": {\"shortcut_name\": \"Assigned to Me\", \"col\": 3}}, {\"id\": \"tl12\", \"type\": \"shortcut\", \"data\": {\"shortcut_name\": \"Test Run Summary\", \"col\": 3}}, {\"id\": \"tl13\", \"type\": \"header\", \"data\": {\"text\": \"<span class=\\\"h4\\\"><b>Masters &amp; Reports</b></span>\", \"col\": 12}}, {\"id\": \"tl14\", \"type\": \"card\", \"data\": {\"card_name\": \"Testing\", \"col\": 4}}, {\"id\": \"tl15\", \"type\": \"card\", \"data\": {\"card_name\": \"Settings\", \"col\": 4}}]",
+ "content": "[{\"id\": \"tl01\", \"type\": \"header\", \"data\": {\"text\": \"<span class=\\\"h4\\\"><b>Test Log</b></span>\", \"col\": 12}}, {\"id\": \"tl02\", \"type\": \"number_card\", \"data\": {\"number_card_name\": \"Open Test Logs\", \"col\": 3}}, {\"id\": \"tl03\", \"type\": \"number_card\", \"data\": {\"number_card_name\": \"Ongoing Test Logs\", \"col\": 3}}, {\"id\": \"tl04\", \"type\": \"number_card\", \"data\": {\"number_card_name\": \"Fixed Test Logs\", \"col\": 3}}, {\"id\": \"tl05\", \"type\": \"number_card\", \"data\": {\"number_card_name\": \"Completed Test Logs\", \"col\": 3}}, {\"id\": \"tl06\", \"type\": \"spacer\", \"data\": {\"col\": 12}}, {\"id\": \"tl07\", \"type\": \"chart\", \"data\": {\"chart_name\": \"Test Logs by Status\", \"col\": 12}}, {\"id\": \"tl08\", \"type\": \"header\", \"data\": {\"text\": \"<span class=\\\"h4\\\"><b>Shortcuts</b></span>\", \"col\": 12}}, {\"id\": \"tl09\", \"type\": \"shortcut\", \"data\": {\"shortcut_name\": \"Test Log\", \"col\": 3}}, {\"id\": \"tl10\", \"type\": \"shortcut\", \"data\": {\"shortcut_name\": \"Test Run\", \"col\": 3}}, {\"id\": \"tl11\", \"type\": \"shortcut\", \"data\": {\"shortcut_name\": \"Assigned to Me\", \"col\": 3}}, {\"id\": \"tl12\", \"type\": \"shortcut\", \"data\": {\"shortcut_name\": \"Test Run Summary\", \"col\": 3}}, {\"id\": \"tl13\", \"type\": \"header\", \"data\": {\"text\": \"<span class=\\\"h4\\\"><b>Masters &amp; Reports</b></span>\", \"col\": 12}}, {\"id\": \"tl14\", \"type\": \"card\", \"data\": {\"card_name\": \"Testing\", \"col\": 4}}, {\"id\": \"tl15\", \"type\": \"card\", \"data\": {\"card_name\": \"Settings\", \"col\": 4}}, {\"id\": \"sla-breached\", \"type\": \"number_card\", \"data\": {\"number_card_name\": \"SLA Breached\", \"col\": 3}}, {\"id\": \"sla-at-risk\", \"type\": \"number_card\", \"data\": {\"number_card_name\": \"SLA At Risk\", \"col\": 3}}, {\"id\": \"open-logs-by-developer\", \"type\": \"chart\", \"data\": {\"chart_name\": \"Open Logs by Developer\", \"col\": 6}}, {\"id\": \"mean-fix-time-by-severity\", \"type\": \"chart\", \"data\": {\"chart_name\": \"Mean Fix Time by Severity\", \"col\": 6}}, {\"id\": \"reopen-rate-by-developer-and-product\", \"type\": \"chart\", \"data\": {\"chart_name\": \"Reopen Rate by Developer and Product\", \"col\": 6}}, {\"id\": \"defects-by-build\", \"type\": \"chart\", \"data\": {\"chart_name\": \"Defects by Build\", \"col\": 6}}, {\"id\": \"test-case\", \"type\": \"shortcut\", \"data\": {\"shortcut_name\": \"Test Case\", \"col\": 3}}, {\"id\": \"test-quality-metrics\", \"type\": \"shortcut\", \"data\": {\"shortcut_name\": \"Test Quality Metrics\", \"col\": 3}}, {\"id\": \"test-build-comparison\", \"type\": \"shortcut\", \"data\": {\"shortcut_name\": \"Test Build Comparison\", \"col\": 3}}, {\"id\": \"test-log-integration\", \"type\": \"shortcut\", \"data\": {\"shortcut_name\": \"Test Log Integration\", \"col\": 3}}]",
  "creation": "2026-08-07 10:00:00",
  "custom_blocks": [],
  "docstatus": 0,
@@ -90,6 +106,34 @@
    "link_type": "DocType",
    "onboard": 0,
    "type": "Link"
+  },
+  {
+   "type": "Link",
+   "label": "Test Case",
+   "link_to": "Test Case",
+   "link_type": "DocType",
+   "is_query_report": 0
+  },
+  {
+   "type": "Link",
+   "label": "Test Quality Metrics",
+   "link_to": "Test Quality Metrics",
+   "link_type": "Report",
+   "is_query_report": 1
+  },
+  {
+   "type": "Link",
+   "label": "Test Build Comparison",
+   "link_to": "Test Build Comparison",
+   "link_type": "Report",
+   "is_query_report": 1
+  },
+  {
+   "type": "Link",
+   "label": "Test Log Integration",
+   "link_to": "Test Log Integration",
+   "link_type": "DocType",
+   "is_query_report": 0
   }
  ],
  "modified": "2026-08-10 18:49:19.203500",
@@ -112,6 +156,14 @@
   {
    "label": "Completed Test Logs",
    "number_card_name": "Completed Test Logs"
+  },
+  {
+   "label": "SLA Breached",
+   "number_card_name": "SLA Breached"
+  },
+  {
+   "label": "SLA At Risk",
+   "number_card_name": "SLA At Risk"
   }
  ],
  "owner": "Administrator",
@@ -150,6 +202,30 @@
    "link_to": "Test Run Summary",
    "report_ref_doctype": "Test Log",
    "type": "Report"
+  },
+  {
+   "type": "DocType",
+   "label": "Test Case",
+   "link_to": "Test Case",
+   "doc_view": "List"
+  },
+  {
+   "type": "Report",
+   "label": "Test Quality Metrics",
+   "link_to": "Test Quality Metrics",
+   "report_ref_doctype": "Test Log"
+  },
+  {
+   "type": "Report",
+   "label": "Test Build Comparison",
+   "link_to": "Test Build Comparison",
+   "report_ref_doctype": "Test Log"
+  },
+  {
+   "type": "DocType",
+   "label": "Test Log Integration",
+   "link_to": "Test Log Integration",
+   "doc_view": "List"
   }
  ],
  "title": "Test Loggers",

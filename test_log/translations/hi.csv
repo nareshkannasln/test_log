@@ -1,0 +1,187 @@
+Test Log,परीक्षण लॉग
+Test Run,परीक्षण रन
+Test Case,परीक्षण केस
+Test Cases,परीक्षण केस
+Test Product,परीक्षण उत्पाद
+Test Log Settings,परीक्षण लॉग सेटिंग
+Test Log Integration,परीक्षण लॉग एकीकरण
+Open,खुला
+Ongoing,जारी
+Needs Info,जानकारी चाहिए
+Fixed,ठीक किया गया
+Completed,पूर्ण
+Won't Fix,ठीक नहीं किया जाएगा
+Reopened,फिर से खोला गया
+Low,कम
+Medium,मध्यम
+High,उच्च
+Critical,अति गंभीर
+Pass,सफल
+Fail,असफल
+Blocked,अवरुद्ध
+Skipped,छोड़ा गया
+Not Run,चलाया नहीं गया
+Planned,नियोजित
+In Progress,प्रगति में
+Signed Off,अनुमोदित
+Subject,विषय
+Title,शीर्षक
+Product,उत्पाद
+Product / Application,उत्पाद / अनुप्रयोग
+Status,स्थिति
+Severity,गंभीरता
+Test Type,परीक्षण प्रकार
+Tester,परीक्षक
+Lead Tester,मुख्य परीक्षक
+Assigned Developer,नियुक्त डेवलपर
+Assign Developer,डेवलपर नियुक्त करें
+Target Fix Date,सुधार की नियत तिथि
+Build / Version,बिल्ड / संस्करण
+Build / Version Tested,परीक्षित बिल्ड / संस्करण
+Fixed in Build,सुधार वाला बिल्ड
+Steps to Reproduce,समस्या दोहराने के चरण
+Steps,चरण
+Expected Result,अपेक्षित परिणाम
+Actual Result,वास्तविक परिणाम
+Expected,अपेक्षित
+Actual,वास्तविक
+Environment,परिवेश
+Evidence,साक्ष्य
+Screenshot,स्क्रीनशॉट
+Screen Recording,स्क्रीन रिकॉर्डिंग
+External Link,बाहरी लिंक
+Document,दस्तावेज़
+Log File,लॉग फ़ाइल
+Caption,विवरण
+Description,विवरण
+Comment,टिप्पणी
+Comments,टिप्पणियाँ
+Reply to,जवाब दें
+Annotation,टिप्पणी चिह्न
+Evidence Discussion,साक्ष्य चर्चा
+Post Comment,टिप्पणी भेजें
+No comments yet.,अभी कोई टिप्पणी नहीं है।
+Mention users (email addresses),उपयोगकर्ताओं का उल्लेख करें (ईमेल पते)
+Merge Duplicate,डुप्लिकेट मिलाएँ
+Original Log,मूल लॉग
+Duplicate Of,इसका डुप्लिकेट
+Mark as Duplicate,डुप्लिकेट चिह्नित करें
+Possible duplicates,संभावित डुप्लिकेट
+Ready to verify,सत्यापन के लिए तैयार
+Verify all in this build,इस बिल्ड के सभी सुधार सत्यापित करें
+Add Test Cases,परीक्षण केस जोड़ें
+Test Execution,परीक्षण निष्पादन
+Coverage,कवरेज
+Case Count,केस संख्या
+Passed Count,सफल संख्या
+Failed Count,असफल संख्या
+Blocked Count,अवरुद्ध संख्या
+Skipped Count,छोड़ी गई संख्या
+Coverage Percent,कवरेज प्रतिशत
+Cases,केस
+Result,परिणाम
+Executed By,निष्पादक
+Executed On,निष्पादन समय
+Summary,सारांश
+Run Date,परीक्षण तिथि
+Sign Off,अनुमोदित करें
+Sign-off,अनुमोदन
+Sign-off notes,अनुमोदन टिप्पणियाँ
+Signed Off By,अनुमोदक
+Signed Off On,अनुमोदन समय
+Sign-off Certificate,अनुमोदन प्रमाणपत्र
+Test Run Sign-off Certificate,परीक्षण रन अनुमोदन प्रमाणपत्र
+Sign-off Notes and Waivers,अनुमोदन टिप्पणियाँ और छूट
+No waiver recorded.,कोई छूट दर्ज नहीं है।
+Defect Summary,दोष सारांश
+Test Quality Metrics,परीक्षण गुणवत्ता माप
+Test Build Comparison,परीक्षण बिल्ड तुलना
+Baseline Build,आधार बिल्ड
+Comparison Build,तुलना बिल्ड
+Baseline,आधार
+Comparison,तुलना
+Still Open,अभी भी खुला
+Regressed,दोबारा उत्पन्न
+Finding,पाया गया दोष
+Category,श्रेणी
+Metric,माप
+Group,समूह
+Value,मान
+Sample Size,नमूना संख्या
+Open Logs by Developer,डेवलपर के अनुसार खुले लॉग
+Mean Fix Time by Severity,गंभीरता के अनुसार औसत सुधार समय
+Reopen Rate by Developer and Product,डेवलपर और उत्पाद के अनुसार पुनःखुलने की दर
+Defects by Build,बिल्ड के अनुसार दोष
+SLA Breached,SLA का उल्लंघन
+SLA At Risk,SLA जोखिम में
+Severity SLA (calendar days),गंभीरता के अनुसार SLA (कैलेंडर दिन)
+Critical SLA Days,अति गंभीर SLA दिन
+High SLA Days,उच्च SLA दिन
+Medium SLA Days,मध्यम SLA दिन
+Low SLA Days,कम SLA दिन
+Unassigned,अनिर्दिष्ट
+Unspecified,निर्दिष्ट नहीं
+Add suggested saved filters,सुझाए गए सहेजे फ़िल्टर जोड़ें
+My open Critical,मेरे खुले अति गंभीर लॉग
+Waiting on me,मेरी कार्रवाई की प्रतीक्षा
+Needs Info from me,मुझसे जानकारी चाहिए
+Create GitHub Issue,GitHub इश्यू बनाएँ
+Git Links,Git लिंक
+GitHub Issue,GitHub इश्यू
+Pull Request,पुल अनुरोध
+Commit,कमिट
+Enable Github,GitHub सक्षम करें
+Github Token,GitHub टोकन
+Webhook Secret,Webhook गोपनीय कुंजी
+Github User,GitHub उपयोगकर्ता
+Enable Email,ईमेल सक्षम करें
+Email Account,ईमेल खाता
+Email Product,ईमेल उत्पाद
+Email Tester,ईमेल परीक्षक
+Support email,सहायता ईमेल
+Failed Network Requests,विफल नेटवर्क अनुरोध
+Steps Before Capture,कैप्चर से पहले के चरण
+Capture Replay,कैप्चर रीप्ले
+Capture Failed Network Requests,विफल नेटवर्क अनुरोध रिकॉर्ड करें
+Capture Recent Interaction Steps,हाल के इंटरैक्शन चरण रिकॉर्ड करें
+Word Report,Word रिपोर्ट
+Excel Sheet,Excel शीट
+Export Sheet,शीट निर्यात करें
+Test Run Summary,परीक्षण रन सारांश
+Test Report,परीक्षण रिपोर्ट
+View,देखें
+Actions,कार्रवाइयाँ
+Add Note,टिप्पणी जोड़ें
+Share with Developer,डेवलपर के साथ साझा करें
+Share & Assign,साझा करें और नियुक्त करें
+Open Repository,रिपॉज़िटरी खोलें
+Add Test Log,परीक्षण लॉग जोड़ें
+Open Test Logs,परीक्षण लॉग खोलें
+Open test log,परीक्षण लॉग खोलें
+Save,सहेजें
+Cancel,रद्द करें
+Close,बंद करें
+Create,बनाएँ
+Apply,लागू करें
+Details,विवरण
+Try again,फिर कोशिश करें
+Discard,हटाएँ
+Log entry,लॉग दर्ज करें
+Log a test note,परीक्षण टिप्पणी दर्ज करें
+Record screen,स्क्रीन रिकॉर्ड करें
+Attach a file,फ़ाइल जोड़ें
+Snip & annotate,काटें और टिप्पणी करें
+Refresh feed,फ़ीड ताज़ा करें
+New run title,नए रन का शीर्षक
+No run — file loose,कोई रन नहीं — अलग दर्ज करें
+Console Errors,कंसोल त्रुटियाँ
+Functional,कार्यात्मक
+Regression,प्रतिगमन
+Performance,प्रदर्शन
+Security,सुरक्षा
+Integration,एकीकरण
+Other,अन्य
+Active,सक्रिय
+Is Active,सक्रिय है
+Module / Feature,मॉड्यूल / सुविधा
+Module Feature,मॉड्यूल सुविधा

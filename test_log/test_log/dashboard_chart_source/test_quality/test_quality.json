@@ -1,0 +1,7 @@
+{
+ "doctype": "Dashboard Chart Source",
+ "name": "Test Quality",
+ "source_name": "Test Quality",
+ "module": "Test Log",
+ "timeseries": 0
+}

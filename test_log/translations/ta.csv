@@ -1,0 +1,187 @@
+Test Log,சோதனைப் பதிவு
+Test Run,சோதனைத் தொகுப்பு
+Test Case,சோதனை நிகழ்வு
+Test Cases,சோதனை நிகழ்வுகள்
+Test Product,சோதனைத் தயாரிப்பு
+Test Log Settings,சோதனைப் பதிவு அமைப்புகள்
+Test Log Integration,சோதனைப் பதிவு ஒருங்கிணைப்பு
+Open,திறந்துள்ளது
+Ongoing,நடைபெறுகிறது
+Needs Info,தகவல் தேவை
+Fixed,சரிசெய்யப்பட்டது
+Completed,முடிக்கப்பட்டது
+Won't Fix,சரிசெய்யப்படாது
+Reopened,மீண்டும் திறக்கப்பட்டது
+Low,குறைவு
+Medium,நடுத்தரம்
+High,அதிகம்
+Critical,மிக முக்கியம்
+Pass,தேர்ச்சி
+Fail,தோல்வி
+Blocked,தடைபட்டுள்ளது
+Skipped,தவிர்க்கப்பட்டது
+Not Run,இயக்கப்படவில்லை
+Planned,திட்டமிடப்பட்டது
+In Progress,நடைபெறுகிறது
+Signed Off,ஒப்புதல் அளிக்கப்பட்டது
+Subject,தலைப்பு
+Title,தலைப்பு
+Product,தயாரிப்பு
+Product / Application,தயாரிப்பு / பயன்பாடு
+Status,நிலை
+Severity,தீவிரம்
+Test Type,சோதனை வகை
+Tester,சோதனையாளர்
+Lead Tester,முதன்மைச் சோதனையாளர்
+Assigned Developer,ஒதுக்கப்பட்ட உருவாக்குநர்
+Assign Developer,உருவாக்குநரை ஒதுக்கு
+Target Fix Date,திருத்துவதற்கான இலக்கு தேதி
+Build / Version,கட்டமைப்பு / பதிப்பு
+Build / Version Tested,சோதித்த கட்டமைப்பு / பதிப்பு
+Fixed in Build,சரிசெய்த கட்டமைப்பு
+Steps to Reproduce,மீண்டும் உருவாக்குவதற்கான படிகள்
+Steps,படிகள்
+Expected Result,எதிர்பார்க்கப்பட்ட முடிவு
+Actual Result,உண்மையான முடிவு
+Expected,எதிர்பார்ப்பு
+Actual,உண்மையானது
+Environment,சூழல்
+Evidence,ஆதாரம்
+Screenshot,திரைப்பிடிப்பு
+Screen Recording,திரைப் பதிவு
+External Link,வெளி இணைப்பு
+Document,ஆவணம்
+Log File,பதிவுக் கோப்பு
+Caption,விளக்கம்
+Description,விவரிப்பு
+Comment,கருத்து
+Comments,கருத்துகள்
+Reply to,பதில் அளி
+Annotation,குறியீட்டு விளக்கம்
+Evidence Discussion,ஆதார விவாதம்
+Post Comment,கருத்தைப் பதிவிடு
+No comments yet.,இதுவரை கருத்துகள் இல்லை.
+Mention users (email addresses),பயனர்களைக் குறிப்பிடு (மின்னஞ்சல் முகவரிகள்)
+Merge Duplicate,நகல் பதிவை ஒன்றிணை
+Original Log,மூலப் பதிவு
+Duplicate Of,இதன் நகல்
+Mark as Duplicate,நகல் எனக் குறி
+Possible duplicates,சாத்தியமான நகல்கள்
+Ready to verify,சரிபார்க்கத் தயார்
+Verify all in this build,இந்தக் கட்டமைப்பில் அனைத்தையும் சரிபார்
+Add Test Cases,சோதனை நிகழ்வுகளைச் சேர்
+Test Execution,சோதனை இயக்கம்
+Coverage,சோதனை உள்ளடக்கம்
+Case Count,சோதனை நிகழ்வு எண்ணிக்கை
+Passed Count,தேர்ச்சி எண்ணிக்கை
+Failed Count,தோல்வி எண்ணிக்கை
+Blocked Count,தடைப்பட்ட எண்ணிக்கை
+Skipped Count,தவிர்க்கப்பட்ட எண்ணிக்கை
+Coverage Percent,சோதனை உள்ளடக்க விழுக்காடு
+Cases,சோதனை நிகழ்வுகள்
+Result,முடிவு
+Executed By,இயக்கியவர்
+Executed On,இயக்கிய நேரம்
+Summary,சுருக்கம்
+Run Date,சோதனைத் தேதி
+Sign Off,ஒப்புதல் அளி
+Sign-off,ஒப்புதல்
+Sign-off notes,ஒப்புதல் குறிப்புகள்
+Signed Off By,ஒப்புதல் அளித்தவர்
+Signed Off On,ஒப்புதல் நேரம்
+Sign-off Certificate,ஒப்புதல் சான்றிதழ்
+Test Run Sign-off Certificate,சோதனைத் தொகுப்பு ஒப்புதல் சான்றிதழ்
+Sign-off Notes and Waivers,ஒப்புதல் குறிப்புகள் மற்றும் விலக்குகள்
+No waiver recorded.,விலக்கு எதுவும் பதிவு செய்யப்படவில்லை.
+Defect Summary,குறைபாடுகளின் சுருக்கம்
+Test Quality Metrics,சோதனைத் தர அளவீடுகள்
+Test Build Comparison,சோதனைக் கட்டமைப்பு ஒப்பீடு
+Baseline Build,அடிப்படைக் கட்டமைப்பு
+Comparison Build,ஒப்பீட்டுக் கட்டமைப்பு
+Baseline,அடிப்படை
+Comparison,ஒப்பீடு
+Still Open,இன்னும் திறந்துள்ளது
+Regressed,மீண்டும் ஏற்பட்டது
+Finding,கண்டறிந்த குறைபாடு
+Category,வகை
+Metric,அளவீடு
+Group,குழு
+Value,மதிப்பு
+Sample Size,மாதிரி எண்ணிக்கை
+Open Logs by Developer,உருவாக்குநர்வாரியாகத் திறந்த பதிவுகள்
+Mean Fix Time by Severity,தீவிரத்தின்படி சராசரித் திருத்த நேரம்
+Reopen Rate by Developer and Product,உருவாக்குநர் மற்றும் தயாரிப்பின்படி மீள்திறப்பு விகிதம்
+Defects by Build,கட்டமைப்பின்படி குறைபாடுகள்
+SLA Breached,சேவை நேர வரம்பு மீறப்பட்டது
+SLA At Risk,சேவை நேர வரம்பு அபாயத்தில்
+Severity SLA (calendar days),தீவிரத்தின்படி சேவை நேர வரம்பு (நாட்கள்)
+Critical SLA Days,மிக முக்கியத் தீவிரத்திற்கான நாட்கள்
+High SLA Days,அதிகத் தீவிரத்திற்கான நாட்கள்
+Medium SLA Days,நடுத்தரத் தீவிரத்திற்கான நாட்கள்
+Low SLA Days,குறைந்தத் தீவிரத்திற்கான நாட்கள்
+Unassigned,ஒதுக்கப்படவில்லை
+Unspecified,குறிப்பிடப்படவில்லை
+Add suggested saved filters,பரிந்துரைத்த வடிப்பான்களைச் சேர்
+My open Critical,எனது திறந்த மிக முக்கியப் பதிவுகள்
+Waiting on me,எனக்காகக் காத்திருப்பவை
+Needs Info from me,என்னிடமிருந்து தகவல் தேவை
+Create GitHub Issue,GitHub சிக்கலை உருவாக்கு
+Git Links,Git இணைப்புகள்
+GitHub Issue,GitHub சிக்கல்
+Pull Request,புல் கோரிக்கை
+Commit,கமிட்
+Enable Github,GitHub-ஐ இயக்கு
+Github Token,GitHub டோக்கன்
+Webhook Secret,Webhook ரகசியம்
+Github User,GitHub பயனர்
+Enable Email,மின்னஞ்சலை இயக்கு
+Email Account,மின்னஞ்சல் கணக்கு
+Email Product,மின்னஞ்சல் தயாரிப்பு
+Email Tester,மின்னஞ்சல் சோதனையாளர்
+Support email,ஆதரவு மின்னஞ்சல்
+Failed Network Requests,தோல்வியடைந்த பிணையக் கோரிக்கைகள்
+Steps Before Capture,பிடிப்பதற்கு முந்தைய படிகள்
+Capture Replay,பிடிப்பின் மீள்பார்வை
+Capture Failed Network Requests,தோல்வியடைந்த பிணையக் கோரிக்கைகளைப் பதிவு செய்
+Capture Recent Interaction Steps,சமீபத்திய செயல்பாடுகளைப் பதிவு செய்
+Word Report,Word அறிக்கை
+Excel Sheet,Excel தாள்
+Export Sheet,தாளை ஏற்றுமதி செய்
+Test Run Summary,சோதனைத் தொகுப்பு சுருக்கம்
+Test Report,சோதனை அறிக்கை
+View,பார்
+Actions,செயல்கள்
+Add Note,குறிப்பைச் சேர்
+Share with Developer,உருவாக்குநருடன் பகிர்
+Share & Assign,பகிர்ந்து ஒதுக்கு
+Open Repository,களஞ்சியத்தைத் திற
+Add Test Log,சோதனைப் பதிவைச் சேர்
+Open Test Logs,சோதனைப் பதிவுகளைத் திற
+Open test log,சோதனைப் பதிவைத் திற
+Save,சேமி
+Cancel,ரத்து செய்
+Close,மூடு
+Create,உருவாக்கு
+Apply,பயன்படுத்து
+Details,விவரங்கள்
+Try again,மீண்டும் முயற்சி செய்
+Discard,கைவிடு
+Log entry,பதிவைச் சேர்
+Log a test note,சோதனைக் குறிப்பைப் பதிவு செய்
+Record screen,திரையைப் பதிவு செய்
+Attach a file,கோப்பை இணை
+Snip & annotate,வெட்டிக் குறியிடு
+Refresh feed,பதிவுகளைப் புதுப்பி
+New run title,புதிய சோதனைத் தொகுப்பின் தலைப்பு
+No run — file loose,தொகுப்பு இல்லை — தனியாகப் பதிவு செய்
+Console Errors,கன்சோல் பிழைகள்
+Functional,செயல்பாட்டுச் சோதனை
+Regression,மீள்பிழைச் சோதனை
+Performance,செயல்திறன்
+Security,பாதுகாப்பு
+Integration,ஒருங்கிணைப்பு
+Other,மற்றவை
+Active,செயலில் உள்ளது
+Is Active,செயலில் உள்ளது
+Module / Feature,தொகுதி / அம்சம்
+Module Feature,தொகுதி அம்சம்

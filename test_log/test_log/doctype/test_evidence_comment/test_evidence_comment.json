@@ -1,0 +1,80 @@
+{
+ "doctype": "DocType",
+ "name": "Test Evidence Comment",
+ "module": "Test Log",
+ "engine": "InnoDB",
+ "field_order": [
+  "test_log",
+  "evidence_row",
+  "annotation",
+  "reply_to",
+  "content",
+  "mentions"
+ ],
+ "fields": [
+  {
+   "fieldname": "test_log",
+   "fieldtype": "Link",
+   "label": "Test Log",
+   "options": "Test Log",
+   "reqd": 1,
+   "in_list_view": 1
+  },
+  {
+   "fieldname": "evidence_row",
+   "fieldtype": "Data",
+   "label": "Evidence Row",
+   "reqd": 1
+  },
+  {
+   "fieldname": "annotation",
+   "fieldtype": "Data",
+   "label": "Annotation",
+   "description": "Optional annotation label or coordinates."
+  },
+  {
+   "fieldname": "reply_to",
+   "fieldtype": "Link",
+   "label": "Reply To",
+   "options": "Test Evidence Comment"
+  },
+  {
+   "fieldname": "content",
+   "fieldtype": "Small Text",
+   "label": "Content",
+   "reqd": 1
+  },
+  {
+   "fieldname": "mentions",
+   "fieldtype": "Small Text",
+   "label": "Mentions",
+   "description": "User email addresses, separated by commas."
+  }
+ ],
+ "permissions": [
+  {
+   "role": "Tester",
+   "read": 1,
+   "write": 1,
+   "create": 1,
+   "delete": 1,
+   "report": 1,
+   "export": 1,
+   "share": 1
+  },
+  {
+   "role": "System Manager",
+   "read": 1,
+   "write": 1,
+   "create": 1,
+   "delete": 1,
+   "report": 1,
+   "export": 1,
+   "share": 1
+  }
+ ],
+ "istable": 0,
+ "editable_grid": 1,
+ "track_changes": 1,
+ "autoname": "hash"
+}

@@ -4,6 +4,36 @@
 frappe.ui.form.on("Test Run", {
 	refresh(frm) {
 		if (frm.is_new()) return;
+		if (window.test_log.management.can_test() && frm.doc.status !== "Signed Off") {
+			frm.add_custom_button(
+				__("Add Test Cases"),
+				() =>
+					new frappe.ui.form.MultiSelectDialog({
+						doctype: "Test Case",
+						target: frm,
+						setters: { product: frm.doc.product },
+						get_query: () => ({ filters: { product: frm.doc.product, is_active: 1 } }),
+						action: (cases) =>
+							frappe.call({
+								method: "window.test_log.management.add_cases",
+								args: { test_run: frm.doc.name, cases },
+								callback: () => {
+									cur_dialog.hide();
+									frm.reload_doc();
+								},
+							}),
+					}),
+				__("Actions")
+			);
+		}
+		frm.dashboard.add_indicator(
+			__("Coverage: {0}% · {1} passed · {2} failed", [
+				Math.round(frm.doc.coverage_percent || 0),
+				frm.doc.passed_count || 0,
+				frm.doc.failed_count || 0,
+			]),
+			"blue"
+		);
 
 		frm.add_custom_button(__("Add Test Log"), () => {
 			frappe.new_doc("Test Log", {

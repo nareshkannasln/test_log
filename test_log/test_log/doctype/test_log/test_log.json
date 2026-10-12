@@ -50,7 +50,11 @@
   "resolved_by",
   "resolved_on",
   "verified_by",
-  "verified_on"
+  "verified_on",
+  "test_case",
+  "reopen_count",
+  "first_resolved_on",
+  "merged_into"
  ],
  "fields": [
   {
@@ -344,6 +348,33 @@
    "label": "Duplicate Of",
    "options": "Test Log",
    "search_index": 1
+  },
+  {
+   "fieldname": "test_case",
+   "fieldtype": "Link",
+   "label": "Test Case",
+   "options": "Test Case",
+   "read_only": 1
+  },
+  {
+   "fieldname": "reopen_count",
+   "fieldtype": "Int",
+   "label": "Reopen Count",
+   "read_only": 1,
+   "default": "0"
+  },
+  {
+   "fieldname": "first_resolved_on",
+   "fieldtype": "Datetime",
+   "label": "First Resolved On",
+   "read_only": 1
+  },
+  {
+   "fieldname": "merged_into",
+   "fieldtype": "Link",
+   "label": "Merged Into",
+   "options": "Test Log",
+   "read_only": 1
   }
  ],
  "index_web_pages_for_search": 1,

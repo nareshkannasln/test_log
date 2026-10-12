@@ -30,7 +30,15 @@
   "signed_off_by",
   "signed_off_on",
   "column_break_signoff",
-  "sign_off_notes"
+  "sign_off_notes",
+  "section_cases",
+  "cases",
+  "case_count",
+  "passed_count",
+  "failed_count",
+  "blocked_count",
+  "skipped_count",
+  "coverage_percent"
  ],
  "fields": [
   {
@@ -181,6 +189,53 @@
    "fieldname": "sign_off_notes",
    "fieldtype": "Small Text",
    "label": "Sign-off Notes",
+   "read_only": 1
+  },
+  {
+   "fieldname": "section_cases",
+   "fieldtype": "Section Break",
+   "label": "Test Execution"
+  },
+  {
+   "fieldname": "cases",
+   "fieldtype": "Table",
+   "label": "Test Cases",
+   "options": "Test Run Case"
+  },
+  {
+   "fieldname": "case_count",
+   "fieldtype": "Int",
+   "label": "Case Count",
+   "read_only": 1
+  },
+  {
+   "fieldname": "passed_count",
+   "fieldtype": "Int",
+   "label": "Passed Count",
+   "read_only": 1
+  },
+  {
+   "fieldname": "failed_count",
+   "fieldtype": "Int",
+   "label": "Failed Count",
+   "read_only": 1
+  },
+  {
+   "fieldname": "blocked_count",
+   "fieldtype": "Int",
+   "label": "Blocked Count",
+   "read_only": 1
+  },
+  {
+   "fieldname": "skipped_count",
+   "fieldtype": "Int",
+   "label": "Skipped Count",
+   "read_only": 1
+  },
+  {
+   "fieldname": "coverage_percent",
+   "fieldtype": "Percent",
+   "label": "Coverage Percent",
    "read_only": 1
   }
  ],

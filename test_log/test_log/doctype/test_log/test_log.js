@@ -38,6 +38,38 @@ frappe.ui.form.on("Test Log", {
 		frm.trigger("add_status_actions");
 		frm.trigger("add_share_action");
 		frm.trigger("show_similar");
+		if (!frm.is_new() && can_edit_test_details() && !frm.doc.merged_into) {
+			frm.add_custom_button(
+				__("Merge Duplicate"),
+				() =>
+					frappe.prompt(
+						[
+							{
+								fieldname: "target",
+								fieldtype: "Link",
+								options: "Test Log",
+								label: __("Original Log"),
+								reqd: 1,
+								default: frm.doc.duplicate_of,
+							},
+						],
+						(values) =>
+							frappe.call({
+								method: "test_log.management.merge_duplicate",
+								args: { source: frm.doc.name, target: values.target },
+								freeze: true,
+								callback: () => frm.reload_doc(),
+							})
+					),
+				__("Actions")
+			);
+		}
+		if (!frm.is_new() && frm.doc.attachments?.length)
+			frm.add_custom_button(
+				__("Evidence Discussion"),
+				() => evidence_discussion(frm),
+				__("Actions")
+			);
 
 		if (frm.doc.assigned_developer && !frm.is_new()) {
 			frm.dashboard.add_indicator(
@@ -386,4 +418,73 @@ function can_edit_test_details() {
 		frappe.session.user === "Administrator" ||
 		["Tester", "System Manager"].some((role) => frappe.user_roles.includes(role))
 	);
+}
+
+function evidence_discussion(frm) {
+	const method = "test_log.test_log.doctype.test_evidence_comment.test_evidence_comment.";
+	const dialog = new frappe.ui.Dialog({
+		title: __("Evidence Discussion"),
+		fields: [
+			{
+				fieldname: "evidence_row",
+				fieldtype: "Select",
+				label: __("Evidence"),
+				reqd: 1,
+				options: frm.doc.attachments.map((row) => ({
+					value: row.name,
+					label: row.caption || row.file_url || row.external_link,
+				})),
+				onchange: load,
+			},
+			{ fieldname: "thread", fieldtype: "HTML" },
+			{ fieldname: "reply_to", fieldtype: "Select", label: __("Reply to"), options: [""] },
+			{ fieldname: "annotation", fieldtype: "Data", label: __("Annotation") },
+			{
+				fieldname: "mentions",
+				fieldtype: "Data",
+				label: __("Mention users (email addresses)"),
+			},
+			{ fieldname: "content", fieldtype: "Small Text", label: __("Comment"), reqd: 1 },
+		],
+		primary_action_label: __("Post Comment"),
+		primary_action: (values) =>
+			frappe.call({
+				method: method + "add_evidence_comment",
+				args: { test_log: frm.doc.name, ...values },
+				callback: () => {
+					dialog.set_value("content", "");
+					load();
+				},
+			}),
+	});
+	function load() {
+		const evidence_row = dialog.get_value("evidence_row");
+		if (!evidence_row) return;
+		frappe.call({
+			method: method + "get_evidence_comments",
+			args: { test_log: frm.doc.name, evidence_row },
+			callback(r) {
+				const escape = frappe.utils.escape_html;
+				dialog.fields_dict.thread.$wrapper.html(
+					(r.message || [])
+						.map(
+							(row) =>
+								`<p><b>${escape(row.owner)}</b> ${escape(row.annotation || "")} ${
+									row.reply_to ? "↳ " + escape(row.reply_to) : ""
+								}<br>${escape(row.content)}</p>`
+						)
+						.join("") || __("No comments yet.")
+				);
+				dialog.set_df_property("reply_to", "options", [
+					"",
+					...(r.message || []).map((row) => ({
+						value: row.name,
+						label: row.owner + ": " + row.content.slice(0, 60),
+					})),
+				]);
+			},
+		});
+	}
+	dialog.show();
+	load();
 }

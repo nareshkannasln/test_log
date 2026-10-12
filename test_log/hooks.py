@@ -43,7 +43,7 @@ _TESTER_WIDGET_JS = [
 ]
 _TESTER_WIDGET_CSS = ["/assets/test_log/css/tester.css"]
 
-app_include_js = [*_TESTER_WIDGET_JS, "/assets/test_log/js/jobs.js"]
+app_include_js = [*_TESTER_WIDGET_JS, "/assets/test_log/js/jobs.js", "/assets/test_log/js/management.js"]
 app_include_css = _TESTER_WIDGET_CSS
 
 # Portal pages are part of what gets tested too — the widget keeps itself hidden
@@ -267,3 +267,10 @@ scheduler_events = {
 # ------------
 # List of apps whose translatable strings should be excluded from this app's translations.
 # ignore_translatable_strings_from = []
+
+has_permission = {
+	"Test Evidence Comment": "test_log.test_log.doctype.test_evidence_comment.test_evidence_comment.has_permission",
+}
+permission_query_conditions = {
+	"Test Evidence Comment": "test_log.test_log.doctype.test_evidence_comment.test_evidence_comment.permission_query_conditions",
+}

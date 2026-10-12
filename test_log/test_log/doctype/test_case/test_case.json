@@ -1,0 +1,89 @@
+{
+ "doctype": "DocType",
+ "name": "Test Case",
+ "module": "Test Log",
+ "engine": "InnoDB",
+ "field_order": [
+  "title",
+  "product",
+  "is_active",
+  "module_feature",
+  "severity",
+  "steps",
+  "expected_result"
+ ],
+ "fields": [
+  {
+   "fieldname": "title",
+   "fieldtype": "Data",
+   "label": "Title",
+   "reqd": 1,
+   "in_list_view": 1
+  },
+  {
+   "fieldname": "product",
+   "fieldtype": "Link",
+   "label": "Product",
+   "options": "Test Product",
+   "reqd": 1,
+   "in_list_view": 1
+  },
+  {
+   "fieldname": "is_active",
+   "fieldtype": "Check",
+   "label": "Is Active",
+   "default": "1"
+  },
+  {
+   "fieldname": "module_feature",
+   "fieldtype": "Data",
+   "label": "Module Feature"
+  },
+  {
+   "fieldname": "severity",
+   "fieldtype": "Select",
+   "label": "Severity",
+   "options": "Low\nMedium\nHigh\nCritical",
+   "default": "Medium"
+  },
+  {
+   "fieldname": "steps",
+   "fieldtype": "Text Editor",
+   "label": "Steps",
+   "reqd": 1
+  },
+  {
+   "fieldname": "expected_result",
+   "fieldtype": "Small Text",
+   "label": "Expected Result",
+   "reqd": 1
+  }
+ ],
+ "permissions": [
+  {
+   "role": "Tester",
+   "read": 1,
+   "write": 1,
+   "create": 1,
+   "delete": 1,
+   "report": 1,
+   "export": 1,
+   "share": 1
+  },
+  {
+   "role": "System Manager",
+   "read": 1,
+   "write": 1,
+   "create": 1,
+   "delete": 1,
+   "report": 1,
+   "export": 1,
+   "share": 1
+  }
+ ],
+ "istable": 0,
+ "editable_grid": 1,
+ "track_changes": 1,
+ "autoname": "format:TC-{#####}",
+ "title_field": "title"
+}

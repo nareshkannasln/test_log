@@ -43,6 +43,14 @@ frappe.listview_settings["Test Log"] = {
 		const can_test =
 			frappe.session.user === "Administrator" ||
 			["Tester", "System Manager"].some((role) => frappe.user_roles.includes(role));
+		if (can_test)
+			listview.page.add_menu_item(
+				__("Verify all in this build"),
+				window.test_log.management.verify_build
+			);
+		listview.page.add_inner_button(__("Ready to verify"), () =>
+			frappe.set_route("List", "Test Log", { status: "Fixed", tester: frappe.session.user })
+		);
 		const statuses = frappe.boot.test_log_vocabulary?.statuses || Object.keys(STATUS_COLORS);
 
 		statuses

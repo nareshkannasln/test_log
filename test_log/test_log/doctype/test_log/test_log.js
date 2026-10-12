@@ -26,6 +26,14 @@ const STATUS_PROMPTS = {
 
 frappe.ui.form.on("Test Log", {
 	refresh(frm) {
+		if (!can_edit_test_details()) {
+			const editable = new Set(["status", "resolution", "fixed_in_build"]);
+			frm.meta.fields
+				.filter((field) => !editable.has(field.fieldname))
+				.forEach((field) => {
+					frm.set_df_property(field.fieldname, "read_only", 1);
+				});
+		}
 		frm.trigger("render_evidence");
 		frm.trigger("add_status_actions");
 		frm.trigger("add_share_action");
@@ -67,13 +75,15 @@ frappe.ui.form.on("Test Log", {
 		const transitions =
 			frappe.boot.test_log_vocabulary?.status_transitions || FALLBACK_TRANSITIONS;
 
-		(transitions[frm.doc.status] || []).forEach((status) => {
-			frm.add_custom_button(
-				__("Mark {0}", [__(status)]),
-				() => update_status(frm, status),
-				__("Status")
-			);
-		});
+		(transitions[frm.doc.status] || [])
+			.filter((status) => status !== "Completed" || can_edit_test_details())
+			.forEach((status) => {
+				frm.add_custom_button(
+					__("Mark {0}", [__(status)]),
+					() => update_status(frm, status),
+					__("Status")
+				);
+			});
 
 		frm.page.set_inner_btn_group_as_primary(__("Status"));
 	},
@@ -98,45 +108,46 @@ frappe.ui.form.on("Test Log", {
 			__("Actions")
 		);
 
-		frm.add_custom_button(
-			__("Share with Developer"),
-			() => {
-				const dialog = new frappe.ui.Dialog({
-					title: __("Share this test log"),
-					fields: [
-						{
-							fieldname: "developer",
-							fieldtype: "Link",
-							options: "User",
-							label: __("Developer"),
-							reqd: 1,
-							default: frm.doc.assigned_developer,
+		if (can_edit_test_details())
+			frm.add_custom_button(
+				__("Share with Developer"),
+				() => {
+					const dialog = new frappe.ui.Dialog({
+						title: __("Share this test log"),
+						fields: [
+							{
+								fieldname: "developer",
+								fieldtype: "Link",
+								options: "User",
+								label: __("Developer"),
+								reqd: 1,
+								default: frm.doc.assigned_developer,
+							},
+							{
+								fieldname: "note",
+								fieldtype: "Small Text",
+								label: __("Note for the developer"),
+							},
+						],
+						primary_action_label: __("Share & Assign"),
+						primary_action(values) {
+							dialog.hide();
+							frm.set_value("assigned_developer", values.developer);
+							if (values.note) {
+								frm.set_value(
+									"resolution",
+									`${frm.doc.resolution || ""}<p>${frappe.utils.escape_html(
+										values.note
+									)}</p>`
+								);
+							}
+							frm.save();
 						},
-						{
-							fieldname: "note",
-							fieldtype: "Small Text",
-							label: __("Note for the developer"),
-						},
-					],
-					primary_action_label: __("Share & Assign"),
-					primary_action(values) {
-						dialog.hide();
-						frm.set_value("assigned_developer", values.developer);
-						if (values.note) {
-							frm.set_value(
-								"resolution",
-								`${frm.doc.resolution || ""}<p>${frappe.utils.escape_html(
-									values.note
-								)}</p>`
-							);
-						}
-						frm.save();
-					},
-				});
-				dialog.show();
-			},
-			__("Actions")
-		);
+					});
+					dialog.show();
+				},
+				__("Actions")
+			);
 
 		frm.add_custom_button(__("Add Note"), () => add_note(frm), __("Actions"));
 
@@ -193,6 +204,7 @@ frappe.ui.form.on("Test Log", {
 					true
 				);
 
+				if (!can_edit_test_details()) return;
 				frm.add_custom_button(
 					__("Mark as Duplicate"),
 					() => mark_duplicate(frm, similar),
@@ -366,5 +378,12 @@ function mark_duplicate(frm, similar) {
 		},
 		__("Mark as duplicate"),
 		__("Mark")
+	);
+}
+
+function can_edit_test_details() {
+	return (
+		frappe.session.user === "Administrator" ||
+		["Tester", "System Manager"].some((role) => frappe.user_roles.includes(role))
 	);
 }

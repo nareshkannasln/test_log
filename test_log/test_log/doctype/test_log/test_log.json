@@ -76,7 +76,8 @@
    "fieldtype": "Link",
    "in_standard_filter": 1,
    "label": "Test Run",
-   "options": "Test Run"
+   "options": "Test Run",
+   "search_index": 1
   },
   {
    "fetch_from": "test_run.product",
@@ -87,13 +88,15 @@
    "in_standard_filter": 1,
    "label": "Product",
    "options": "Test Product",
-   "reqd": 1
+   "reqd": 1,
+   "search_index": 1
   },
   {
    "description": "Screen, module or feature area.",
    "fieldname": "module_feature",
    "fieldtype": "Data",
-   "label": "Module / Feature"
+   "label": "Module / Feature",
+   "search_index": 1
   },
   {
    "fieldname": "column_break_main",
@@ -222,7 +225,8 @@
    "description": "Where the tester was when they logged this.",
    "fieldname": "page_route",
    "fieldtype": "Data",
-   "label": "Page / Route"
+   "label": "Page / Route",
+   "search_index": 1
   },
   {
    "fieldname": "page_url",
@@ -256,7 +260,7 @@
    "read_only": 1
   },
   {
-   "description": "Idempotency key from the capture widget — stops a queued entry being filed twice.",
+   "description": "Idempotency key from the capture widget \u2014 stops a queued entry being filed twice.",
    "fieldname": "client_id",
    "fieldtype": "Data",
    "hidden": 1,
@@ -334,7 +338,7 @@
    "label": "Duplicate"
   },
   {
-   "description": "The log this one repeats. Set it from “Possible duplicates” on the form.",
+   "description": "The log this one repeats. Set it from \u201cPossible duplicates\u201d on the form.",
    "fieldname": "duplicate_of",
    "fieldtype": "Link",
    "label": "Duplicate Of",
@@ -372,16 +376,6 @@
    "read": 1,
    "report": 1,
    "role": "Tester",
-   "share": 1,
-   "write": 1
-  },
-  {
-   "email": 1,
-   "export": 1,
-   "print": 1,
-   "read": 1,
-   "report": 1,
-   "role": "Developer",
    "share": 1,
    "write": 1
   }

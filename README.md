@@ -197,8 +197,10 @@ is in it, then a page per log with its evidence. Logs the tester cannot read are
 reported rather than failing the export.
 
 Turn on **Keep a Report Attached to Each Run** in the settings and the run's document is refreshed
-in the background whenever one of its logs changes — deduplicated per run, so a burst of entries
-rebuilds it once.
+in the background when a log is created, changes status, or moves between runs. Jobs are
+deduplicated per run. Other edits are included the next time a report is generated; use **Word
+Report** for an immediate refresh. Automatic refresh requires the acting user to have write
+access to the run.
 
 No dependency is involved: the `.docx` is written directly, so it works on an offline machine too.
 
@@ -215,7 +217,9 @@ Flow*, *Freeze Signed-off Runs*, *Warn About Possible Duplicates*, *Chase Overdu
 *Send a Daily Digest*.
 
 The attachment size limit and the `http(s)` rule for external links are **checked on the server as
-well as in the panel**, so they hold for anything posted straight to the API.
+well as in the panel**. Every file must have a File record and be owned by the current user,
+attached to a readable log being edited, or readable through Frappe permissions. Word generation
+checks file access again, including for evidence saved before these checks existed.
 
 Installing the app switches tester mode on for Tester and System Manager. Turning it off hides the
 button for everyone, and it stays off across upgrades.
@@ -234,8 +238,19 @@ URLs. Use the report view's built-in **Export** for Excel or CSV.
 The app creates two roles on install:
 
 - **Tester** — full create/read/write/delete on runs, logs and products; signs runs off
-- **Developer** — read/write on test logs (so they can update status, ask for more information and
-  add resolution notes), read-only on runs and products
+- **Developer** — access to logs and runs through assignment or explicit sharing; read-only on
+  products. Shared write access allows status, resolution notes and the fixed build to be changed.
+  Tester fields and evidence remain protected, and only Tester/System Manager users can verify
+  a fix. A user who also has Tester or System Manager retains those roles’ broader permissions.
+
+Sharing a run includes logs added or moved into it later, preserving read-only versus write
+access and any stronger existing log share. Existing explicit shares remain until revoked.
+Upgrades remove the old Developer permissions from both standard and customized permissions;
+run `bench --site <site> migrate` to apply the change.
+
+Run exports check access to each log. Partial exports and exports made by read-only users are
+private files owned by the requester; they do not replace the report attached to the run.
+Attached exports require write access.
 
 ## Installation
 
@@ -269,3 +284,29 @@ every pull request — see `.github/workflows/ci.yml`.
 ## License
 
 MIT
+
+## Hardening and large runs
+
+Bulk status/field actions and Word/Excel exports with more than 50 logs run on the `long` queue.
+Workers recheck access as the requesting user. Keep a long-queue worker and Socket.IO running;
+Desk shows completion results or a download link through realtime notifications. Smaller actions
+return their result immediately. In the portal capture panel, queued report requests direct the
+user to Desk for completion.
+
+Daily digests list Critical, High, Medium, then Low severity, keeping older logs first within each
+severity. Overdue reminders run at 1, 3 and 7 days after the target date. Duplicate detection
+tries indexed route/feature matches first, then checks subject words in at most the latest 200
+logs in the selected run/product (or the latest 200 accessible logs without a scope). Older
+subject-only matches can be absent from suggestions.
+
+Browser smoke tests run against the actual capture scripts with API responses stubbed:
+
+```bash
+npm ci
+npx playwright install chromium
+npm run test:widget
+```
+
+The server suite includes attachment permissions, developer field protection, inherited shares,
+digest order, export filtering, savepoint retries and background-action permissions. Browser
+smoke tests also run in CI.

@@ -15,12 +15,15 @@ from frappe.utils import format_datetime, get_url
 from test_log.api.artifacts import deliver, plain_text
 from test_log.constants import IMAGE_EXTENSIONS
 from test_log.docx import Document
+from test_log.evidence import readable_file
+from test_log.jobs import background_large
 
 REPORT_PREFIX = "Test Report"
 CONSOLE_EXCERPT = 1500
 
 
 @frappe.whitelist()
+@background_large
 def build_run_report(test_run: str, attach: int = 1):
 	"""Word report for a whole run: every log in it, with its evidence."""
 	run = frappe.get_doc("Test Run", test_run)
@@ -28,18 +31,27 @@ def build_run_report(test_run: str, attach: int = 1):
 
 	logs = frappe.get_all("Test Log", filters={"test_run": run.name}, pluck="name", order_by="creation asc")
 
+	readable = [name for name in logs if frappe.has_permission("Test Log", "read", doc=name)]
+	skipped = len(logs) - len(readable)
+	logs = readable
+	# Partial exports must never replace the shared run artifact.
+	attach = int(attach) if not skipped else 0
 	document = Document()
-	_run_cover(document, run, len(logs))
+	_run_cover(document, run, logs)
 
 	if not logs:
 		document.paragraph(_("No test logs in this run yet."), italic=True, color="616E7C")
 
 	_write_logs(document, logs)
 
-	return deliver(document.render(), run, f"{REPORT_PREFIX} - {run.name}.docx", int(attach))
+	return deliver(document.render(), run, f"{REPORT_PREFIX} - {run.name}.docx", int(attach)) | {
+		"logs": len(logs),
+		"skipped": skipped,
+	}
 
 
 @frappe.whitelist()
+@background_large
 def build_selection_report(names: str | list, attach: int = 0):
 	"""One Word document covering the logs ticked in the list view.
 
@@ -136,7 +148,10 @@ def _selection_cover(document: Document, names: list[str]):
 	document.rule()
 
 
-def _run_cover(document: Document, run, log_count: int):
+def _run_cover(document: Document, run, logs: list[str]):
+	from collections import Counter
+
+	counts = Counter(frappe.db.get_value("Test Log", name, "status") for name in logs)
 	document.heading(run.title, level=0)
 	document.paragraph(_("Test run {0}").format(run.name), size=20, color="616E7C", space_after=200)
 
@@ -148,7 +163,11 @@ def _run_cover(document: Document, run, log_count: int):
 	document.label_value(
 		_("Logs"),
 		_("{0} total · {1} open · {2} ongoing · {3} fixed · {4} completed").format(
-			log_count, run.open_count, run.ongoing_count, run.fixed_count, run.completed_count
+			len(logs),
+			counts["Open"] + counts["Reopened"],
+			counts["Ongoing"],
+			counts["Fixed"],
+			counts["Completed"],
 		),
 	)
 
@@ -218,7 +237,7 @@ def _evidence(document: Document, log):
 
 	document.heading(_("Evidence"), level=2)
 
-	files = _files_by_url([row.file_url for row in rows if row.file_url])
+	files = {url: readable_file(url, log) for url in {row.file_url for row in rows if row.file_url}}
 
 	for row in rows:
 		caption = row.caption or row.attachment_type
@@ -228,6 +247,9 @@ def _evidence(document: Document, log):
 			continue
 
 		file = files.get(row.file_url)
+		if not file:
+			document.paragraph(_("Evidence unavailable: file missing or access denied."), italic=True)
+			continue
 		extension = (row.file_url.rsplit(".", 1)[-1] or "").lower()
 
 		if file and extension in IMAGE_EXTENSIONS and extension != "svg":
@@ -243,19 +265,6 @@ def _evidence(document: Document, log):
 # ------------------------------------------------------------------ plumbing
 
 
-def _files_by_url(urls: list[str]) -> dict:
-	if not urls:
-		return {}
-
-	rows = frappe.get_all(
-		"File",
-		filters={"file_url": ["in", list(set(urls))]},
-		fields=["name", "file_url", "file_size", "is_private"],
-	)
-
-	return {row.file_url: row for row in rows}
-
-
 def _file_content(file) -> bytes | None:
 	"""Raw bytes of an attachment.
 
@@ -264,7 +273,10 @@ def _file_content(file) -> bytes | None:
 	the image lands in the document corrupt.
 	"""
 	try:
-		path = frappe.get_doc("File", file.name).get_full_path()
+		file = frappe.get_doc("File", file.name)
+		if not frappe.has_permission("File", "read", doc=file):
+			return None
+		path = file.get_full_path()
 		if path.startswith(("http://", "https://", "ftp://")):
 			return None
 
@@ -289,5 +301,10 @@ def refresh_run_report(test_run: str):
 	if not test_run or not frappe.db.exists("Test Run", test_run):
 		return
 
-	build_run_report(test_run, attach=1)
-	frappe.db.commit()
+	from test_log.jobs import _running
+
+	token = _running.set(True)
+	try:
+		build_run_report(test_run, attach=1)
+	finally:
+		_running.reset(token)

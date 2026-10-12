@@ -774,3 +774,16 @@ body.tl-resizing {
 		display: none;
 	}
 }
+
+/* Portal pages do not always include Desk's [hidden] reset. Keep our flex/grid
+ * rules from overriding the native hidden attribute on panels and controls. */
+.tl-fab[hidden],
+.tl-panel[hidden],
+.tl-annotate[hidden],
+.tl-fab-menu[hidden],
+.tl-fab [hidden],
+.tl-panel [hidden],
+.tl-annotate [hidden],
+.tl-fab-menu [hidden] {
+	display: none !important;
+}

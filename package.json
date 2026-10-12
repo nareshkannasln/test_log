@@ -1,0 +1,6 @@
+{
+  "name": "test-log-widget-tests",
+  "private": true,
+  "scripts": { "test:widget": "playwright test" },
+  "devDependencies": { "@playwright/test": "1.58.2" }
+}

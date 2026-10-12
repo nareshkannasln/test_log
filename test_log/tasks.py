@@ -9,9 +9,9 @@ starts emailing people the day it is installed makes itself unwelcome.
 
 import frappe
 from frappe import _
-from frappe.utils import get_url_to_form, get_url_to_list, getdate, nowdate
+from frappe.utils import add_days, get_url_to_form, get_url_to_list, getdate, nowdate
 
-from test_log.constants import UNSETTLED_STATUSES
+from test_log.constants import SEVERITIES, UNSETTLED_STATUSES
 from test_log.test_log.doctype.test_log_settings.test_log_settings import get_settings
 
 DIGEST_LIMIT = 25
@@ -33,12 +33,11 @@ def notify_overdue_logs():
 	logs = frappe.get_all(
 		"Test Log",
 		filters={
-			"target_date": ["<", nowdate()],
+			"target_date": ["in", [add_days(nowdate(), -days) for days in (1, 3, 7)]],
 			"status": ["in", UNSETTLED_STATUSES],
 		},
 		fields=["name", "subject", "status", "severity", "target_date", "assigned_developer", "tester"],
 		order_by="target_date asc",
-		limit=500,
 	)
 
 	for log in logs:
@@ -47,6 +46,8 @@ def notify_overdue_logs():
 			continue
 
 		days = (getdate(nowdate()) - getdate(log.target_date)).days
+		if days not in (1, 3, 7):
+			continue
 		_notify(
 			list(recipients),
 			"Test Log",
@@ -67,10 +68,10 @@ def send_daily_digest():
 			"assigned_developer": ["is", "set"],
 		},
 		fields=["name", "subject", "status", "severity", "target_date", "assigned_developer"],
-		order_by="severity desc, creation asc",
-		limit=2000,
+		order_by="creation asc",
 	)
 
+	logs.sort(key=lambda log: -SEVERITIES.index(log.severity) if log.severity in SEVERITIES else 1)
 	by_developer = {}
 	for log in logs:
 		by_developer.setdefault(log.assigned_developer, []).append(log)

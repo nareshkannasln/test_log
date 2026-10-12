@@ -128,10 +128,16 @@ function build_report(frm) {
 		freeze: true,
 		freeze_message: __("Building the report..."),
 		callback(r) {
+			if (r.message?.queued) {
+				frappe.show_alert(__("Queued. You will be notified when it finishes."));
+				return;
+			}
 			if (!r.message?.file_url) return;
 
 			frappe.show_alert({
-				message: __("Report attached to this run"),
+				message: r.message.attached
+					? __("Report attached to this run")
+					: __("Report ready to download"),
 				indicator: "green",
 			});
 			frm.reload_doc();
@@ -148,6 +154,10 @@ function build_sheet(frm) {
 		freeze: true,
 		freeze_message: __("Building the sheet..."),
 		callback(r) {
+			if (r.message?.queued) {
+				frappe.show_alert(__("Queued. You will be notified when it finishes."));
+				return;
+			}
 			if (!r.message?.file_url) return;
 
 			frappe.show_alert({
